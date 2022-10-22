@@ -1,4 +1,4 @@
-import mysql from 'mysql';
+import mysql from 'mysql2';
 
 function configureNew() {
     const host = process.env.SQL_HOST;
