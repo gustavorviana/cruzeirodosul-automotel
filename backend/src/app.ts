@@ -19,7 +19,7 @@ export default async function () {
     app.use(cors());
     app.use(auth);
     app.use(express.json())
-    app.use(express.static('../interface/dist/interface'));
+    app.use(express.static('../interface/dist'));
 
     console.log('Registrando rotas...');
 
