@@ -2,12 +2,14 @@ import express from 'express';
 import route from './routes';
 import cors from 'cors';
 import auth from './middleware/AuthMiddleware';
-import { checkConnection, connect } from './config/db'
+import db from './config/db'
 
 export default async function () {
     console.log('Verificando banco de dados...');
     
-    await checkConnection();
+    await db.authenticate();
+    await db.close();
+
     console.log("Iniciando express...");
 
     const app = express();

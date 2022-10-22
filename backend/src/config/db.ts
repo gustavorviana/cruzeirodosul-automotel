@@ -1,4 +1,4 @@
-import mysql from 'mysql2';
+import { Sequelize } from 'sequelize';
 
 function configureNew() {
     const host = process.env.SQL_HOST;
@@ -9,27 +9,10 @@ function configureNew() {
     if (!host || !user || !database)
         throw new Error('O banco de dados deve ser configurado!');
 
-    return mysql.createConnection({
-        host, user, password, database
+    return new Sequelize(database, user, password, {
+        host: host,
+        dialect: 'mysql'
     });
 }
 
-export function connect() {
-    return new Promise<mysql.Connection>((resolve, reject) => {
-        try {
-            const connection = configureNew();
-            connection.connect((err) => {
-                if (err)
-                    return reject(err);
-
-                resolve(connection);
-            })
-        } catch (error) {
-            reject(error);
-        }
-    });
-};
-
-export async function checkConnection() {
-    (await connect()).end();
-}
+export default configureNew();
