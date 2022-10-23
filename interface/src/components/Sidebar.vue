@@ -18,9 +18,6 @@ import SidebarHeader from '../components/SidebarHeader.vue'
 
                 <MenuLink to="/" name="Dashboard" icon="sliders" />
             </ul>
-            <RouterLink to="/logout" class="sidebar-link">
-               <span class="align-middle">Deslogar</span>
-            </RouterLink>
         </div>
     </nav>
 </template>
