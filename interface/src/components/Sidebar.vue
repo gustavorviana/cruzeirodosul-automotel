@@ -1,0 +1,26 @@
+<script setup lang="ts">
+import { RouterLink } from "vue-router";
+import MenuLink from '../components/MenuLink.vue'
+import SidebarHeader from '../components/SidebarHeader.vue'
+</script>
+
+<template>
+    <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+            <RouterLink class="sidebar-brand" to="/">
+                <span class="align-middle">Automotel</span>
+            </RouterLink>
+
+            <ul class="sidebar-nav">
+                <SidebarHeader>
+                    Páginas
+                </SidebarHeader>
+
+                <MenuLink to="/" name="Dashboard" icon="sliders" />
+            </ul>
+            <RouterLink to="/logout" class="sidebar-link">
+               <span class="align-middle">Deslogar</span>
+            </RouterLink>
+        </div>
+    </nav>
+</template>
