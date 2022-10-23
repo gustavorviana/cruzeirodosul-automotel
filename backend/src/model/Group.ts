@@ -10,7 +10,6 @@ export class Group extends Model {
 Group.init({
     id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true
     },
     name: {

@@ -3,12 +3,14 @@ import route from './routes';
 import cors from 'cors';
 import auth from './middleware/AuthMiddleware';
 import db from './config/db'
+import { configureGroups, configureUsers } from './config/ModelConfig';
 
 export default async function () {
     console.log('Verificando banco de dados...');
-    
+
     await db.authenticate();
-    await db.close();
+    configureGroups();
+    configureUsers();
 
     console.log("Iniciando express...");
 
@@ -26,3 +28,4 @@ export default async function () {
     app.use(route);
     return app;
 };
+

@@ -10,37 +10,42 @@ export class User extends Model {
     declare password: string;
     declare createdAt: Date;
     declare document: string;
+    declare group: Group;
+
+    toJSON() {
+        return {
+            id: this.id,
+            name: this.name,
+            email: this.email,
+            document: this.document,
+            group: this.group ?? null,
+            createdAt: this.createdAt
+        };
+    }
 }
 
 User.init({
     id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true
     },
     groupId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+        type: DataTypes.INTEGER
     },
     name: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
     },
     email: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
     },
     password: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
     },
     createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false
+        type: DataTypes.DATE
     },
     document: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
     }
 }, {
     sequelize,

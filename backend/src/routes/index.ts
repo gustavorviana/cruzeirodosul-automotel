@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import path from 'path';
+import LoginController from '../controller/Login';
 
 const route = Router();
 
@@ -11,5 +12,6 @@ route.use((request, response, next) => {
 });
 
 route.get('/api', (_, res) => res.json({ message: 'Ok.' }));
+route.post('/api/login', LoginController);
 
 export default route;

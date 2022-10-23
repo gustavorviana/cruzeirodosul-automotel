@@ -8,20 +8,30 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "home",
+      name: "Home",
       component: Dashboard,
     },
     {
       path: "/login",
-      name: "login",
-      component: Login
+      name: "Login",
+      component: Login,
+      meta: {
+        ignoreLogin: true
+      }
     },
     {
       component: NotFoundPage,
       path: "/:catchAll(.*)",
-      name: "NotFound"
+      name: "NotFound",
+      meta: {
+        ignoreLogin: true
+      }
     }
   ],
 });
-
+// router.beforeEach((to, from, next) => {
+//   if (to.name == "Home")
+//     next("NotFound");
+//   else next();
+// })
 export default router;
