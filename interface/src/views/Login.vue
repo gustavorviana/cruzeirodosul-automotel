@@ -1,6 +1,35 @@
 <script setup lang="ts">
 import Card from '../components/Card.vue'
 import InputGroup from '../components/Form/InputGroup.vue'
+import Alert from '../components/Alert.vue'
+import { loginUser } from "../utils/UserUtils";
+import { defineComponent } from 'vue';
+</script>
+
+<script lang="ts">
+export default 
+defineComponent({
+    data() {
+        return {
+            email: "",
+            password: "",
+            errorMessage: ""
+        };
+    },
+    methods: {
+        async login(e: Event) {
+            e.preventDefault();
+
+            try {
+                await loginUser(this.email, this.password);
+                this.$router.push('/')
+                this.errorMessage = "";
+            } catch (error: any) {
+                this.errorMessage = error.response.data.message;
+            }
+        }
+    }
+});
 </script>
 
 <template>
@@ -13,23 +42,22 @@ import InputGroup from '../components/Form/InputGroup.vue'
                         <div class="text-center mt-4">
                             <h1 class="h2">Entre para continuar</h1>
                         </div>
-
+                        <Alert v-if="errorMessage" can-dismiss>{{ errorMessage }}</Alert>
                         <Card>
                             <div class="m-sm-4">
-                                <form>
+                                <form @submit="login">
                                     <InputGroup header="Email">
                                         <input class="form-control form-control-md" type="email"
-                                            placeholder="Insira seu email" />
+                                            placeholder="Insira seu email" v-model="email" />
                                     </InputGroup>
 
                                     <InputGroup header="Senha">
                                         <input class="form-control form-control-md" type="password"
-                                            placeholder="insira sua senha" />
+                                            placeholder="insira sua senha" v-model="password" />
                                     </InputGroup>
 
                                     <div class="text-center mt-3">
-                                        <a href="/" class="btn btn-lg btn-primary">Entrar</a>
-                                        <!-- <button type="submit" class="btn btn-lg btn-primary">Entrar</button> -->
+                                        <button type="submit" class="btn btn-lg btn-primary">Entrar</button>
                                     </div>
                                 </form>
                             </div>

@@ -5,7 +5,7 @@ import PageTitle from '../components/PageTitle.vue'
 
 <template>
     <Layout>
-        <PageTitle strong-title="AA">
+        <PageTitle>
             Dashboard
         </PageTitle>
     </Layout>

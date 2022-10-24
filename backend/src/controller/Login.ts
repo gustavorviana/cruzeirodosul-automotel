@@ -6,7 +6,7 @@ export default async (req: Request, res: Response) => {
     const password = req.body.password;
 
     if (!email || !password)
-        return res.status(400).json({ message: 'Um email e seha devem ser inseridos.' });
+        return res.status(400).json({ message: 'Um email e senha devem ser inseridos.' });
 
     try {
         const session = await authUser(email, password)
