@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "@/views/Dashboard.vue";
+import Rooms from "@/views/Rooms.vue";
 import Login from "@/views/Login.vue";
 import NotFoundPage from "@/views/Errors/404.vue";
 import { getCurrentUser } from "../utils/UserUtils";
@@ -11,6 +12,11 @@ const router = createRouter({
       path: "/",
       name: "Home",
       component: Dashboard,
+    },
+    {
+      path: "/quartos",
+      name: "Rooms",
+      component: Rooms,
     },
     {
       path: "/login",
@@ -42,5 +48,5 @@ router.beforeEach((to, from, next) => {
     return next('/login');
 
   next();
-})
+});
 export default router;

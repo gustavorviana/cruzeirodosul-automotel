@@ -17,6 +17,7 @@ import SidebarHeader from '../components/SidebarHeader.vue'
                 </SidebarHeader>
 
                 <MenuLink to="/" name="Dashboard" icon="sliders" />
+                <MenuLink to="/quartos" name="Quartos" icon="home" />
             </ul>
         </div>
     </nav>
