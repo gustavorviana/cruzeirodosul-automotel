@@ -2,10 +2,12 @@
 import { RouterView } from "vue-router";
 
 function onUpdate() {
-  try { document.dispatchEvent(new Event("DOMContentLoaded")); } catch (error) { }
+  setTimeout(() => {
+    require('./Utils').refreshSystemIcons();
+  }, 100);
 }
 </script>
 
 <template>
-  <RouterView @vnode-updated="onUpdate"/>
+  <RouterView @vnode-updated="onUpdate" />
 </template>

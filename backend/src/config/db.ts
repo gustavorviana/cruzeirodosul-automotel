@@ -11,7 +11,8 @@ function configureNew() {
 
     return new Sequelize(database, user, password, {
         host: host,
-        dialect: 'mysql'
+        dialect: 'mysql',
+        timezone: 'America/Sao_Paulo'
     });
 }
 

@@ -6,40 +6,17 @@ import Modal from '@/components/Modal.vue';
 import NumericInput from '@/components/NumericInput.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import PageTitle from '@/components/PageTitle.vue';
+import { Url } from '@/Defaults';
+import axios from 'axios';
 import { ref } from 'vue';
+import { toBrDate, refreshSystemIcons } from '../utils';
 
 const isCreateOpen = ref(false);
 const roomNumber = ref<number | string>('');
 
-const rooms = ref<Room[]>([
-    {
-        id: 1,
-        ocupationInfo: {
-            customer: {
-                id: 1,
-                name: "Marcos Almeida"
-            },
-            startAt: new Date(),
-            timeInfo: "5 minuto"
-        }
-    },
+const rooms = ref<Room[]>([]);
 
-    {
-        id: 2,
-        ocupationInfo: {
-            customer: {
-                id: 1,
-                name: "Rodolfo"
-            },
-            startAt: new Date(),
-            timeInfo: "11 minuto"
-        }
-    },
-    {
-        id: 3,
-        ocupationInfo: null
-    }
-]);
+refresh();
 
 function saveNewRoom() {
     if (roomNumber.value === '')
@@ -53,13 +30,10 @@ function saveNewRoom() {
         return alert('Um quarto com esse número já foi registrado.');
 
     isCreateOpen.value = false;
-    rooms.value = [
-        ...rooms.value,
-        {
-            id: id,
-            ocupationInfo: null
-        }
-    ];
+
+    axios.post(Url + 'api/rooms', { roomNumber: roomNumber.value })
+        .then(data => rooms.value = data.data)
+        .then(() => refresh());
 }
 
 function hasId(id: number) {
@@ -74,6 +48,21 @@ function showCreateRoomModal() {
 function cancelCreate() {
     isCreateOpen.value = false;
     roomNumber.value = '';
+}
+
+function deleteRoom(id: number) {
+    if (!confirm('Deseja realmente apagar esse quarto ?'))
+        return;
+
+    axios.delete(Url + 'api/rooms', { data: { id } })
+        .then(data => rooms.value = data.data)
+        .then(() => refresh());
+}
+
+async function refresh() {
+    return axios.get(Url + 'api/rooms')
+        .then(data => rooms.value = data.data)
+        .then(() => refreshSystemIcons());
 }
 </script>
 
@@ -101,16 +90,14 @@ function cancelCreate() {
                 </thead>
                 <tbody>
                     <tr v-for="room in rooms">
-                        <td>#{{ room.id }}</td>
+                        <td>#{{ room.roomNumber }}</td>
                         <td>{{ room.ocupationInfo?.customer?.name ?? '-' }}</td>
-                        <td class="d-none d-md-table-cell">{{ room.ocupationInfo?.startAt?.toLocaleString() ?? '-' }}
+                        <td class="d-none d-md-table-cell">{{ toBrDate(room.ocupationInfo?.startAt)
+                        }}
                         </td>
                         <td class="d-none d-md-table-cell">{{ room.ocupationInfo?.timeInfo ?? '-' }}</td>
                         <td class="table-action">
-                            <a href="#">
-                                <Icon icon="edit" />
-                            </a>
-                            <a href="#">
+                            <a href="#" @click="() => deleteRoom(room.id)">
                                 <Icon icon="trash-2" />
                             </a>
                         </td>

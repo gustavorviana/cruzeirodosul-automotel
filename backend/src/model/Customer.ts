@@ -23,7 +23,7 @@ Customer.init({
     }
 }, {
     sequelize,
-    modelName: 'Customer',
+    modelName: 'customer',
     freezeTableName: true,
     timestamps: false
 });
