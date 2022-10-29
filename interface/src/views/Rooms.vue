@@ -3,22 +3,19 @@ import Card from '@/components/Card.vue';
 import Icon from '@/components/Icon.vue';
 import Layout from '@/components/Layout.vue';
 import Modal from '@/components/Modal.vue';
-import AutoComplete from '@/components/AutoComplete.vue';
 import NumericInput from '@/components/NumericInput.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import PageTitle from '@/components/PageTitle.vue';
-import { Url } from '@/Defaults';
-import axios from 'axios';
+import { axios } from '@/Defaults';
 import { ref } from 'vue';
 import { toBrDate, refreshSystemIcons } from '../utils';
+import RoomOptionsModal from '@/components/Modals/Customer/RoomOptionsModal.vue';
 
 const isCreateOpen = ref(false);
 const roomNumber = ref<number | string>('');
 const roomOption = ref<Room>();
 
 const rooms = ref<Room[]>([]);
-
-const itens = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 refresh();
 
@@ -35,7 +32,7 @@ function saveNewRoom() {
 
     isCreateOpen.value = false;
 
-    axios.post(Url + 'api/rooms', { roomNumber: roomNumber.value })
+    axios.post('api/rooms', { roomNumber: roomNumber.value })
         .then(data => rooms.value = data.data)
         .then(() => refresh());
 }
@@ -58,7 +55,7 @@ function deleteRoom(id: number) {
     if (!confirm('Deseja realmente apagar esse quarto ?'))
         return;
 
-    axios.delete(Url + 'api/rooms', { data: { id } })
+    axios.delete('api/rooms', { data: { id } })
         .then(data => rooms.value = data.data)
         .then(() => refresh());
 }
@@ -68,13 +65,13 @@ function closeOptionsModal() {
 }
 
 function showOptionsModal(id: number) {
-    axios.get(Url + 'api/rooms/' + id)
+    axios.get('api/rooms/' + id)
         .then(data => roomOption.value = data.data)
         .catch(() => alert('Não foi possível recuperar informações do quarto.'));
 }
 
 async function refresh() {
-    return axios.get(Url + 'api/rooms')
+    return axios.get('api/rooms')
         .then(data => rooms.value = data.data)
         .then(() => refreshSystemIcons())
         .catch(() => alert('Não foi possível listar os quartos.'));
@@ -135,15 +132,6 @@ async function refresh() {
                 <button type="button" class="btn btn-primary" @click="saveNewRoom">Cadastrar</button>
             </template>
         </Modal>
-        <Modal title="Opções do quarto" :is-open="!!roomOption" @close="closeOptionsModal">
-            <div class="mb-3">
-                <label class="form-label">Cliente ocupando quarto</label>
-                <AutoComplete v-if="roomOption?.ocupationInfo" width="465" :items="itens">
-                    <template #table-tr="{ item }">
-                        {{ item }}
-                    </template>
-                </AutoComplete>
-            </div>
-        </Modal>
+        <RoomOptionsModal :is-open="!!roomOption" @on-cancel="closeOptionsModal" />
     </Layout>
 </template>

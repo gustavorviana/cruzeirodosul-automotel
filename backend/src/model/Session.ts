@@ -38,3 +38,5 @@ Session.init({
     freezeTableName: true,
     timestamps: false
 });
+
+Session.hasOne(User, { sourceKey: 'userId', foreignKey: 'id' });

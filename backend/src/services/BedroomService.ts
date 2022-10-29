@@ -64,6 +64,14 @@ export async function deleteRoom(id: number) {
     await Bedroom.destroy({ where: { id } });
 }
 
+export async function existBedroom(id: number) {
+    return await Bedroom.count({
+        where: {
+            id: id
+        }
+    }) > 0;
+}
+
 function translateToFrondBedroom(bedroom: Bedroom) {
     return {
         id: bedroom.id,

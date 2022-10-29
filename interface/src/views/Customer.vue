@@ -4,8 +4,7 @@ import Layout from '@/components/Layout.vue';
 import CreateCustomerModal from '@/components/Modals/Customer/CreateCustomerModal.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import PageTitle from '@/components/PageTitle.vue';
-import { Url } from '@/Defaults';
-import axios from 'axios';
+import { axios } from '@/Defaults';
 import { ref } from 'vue';
 import { refreshSystemIcons } from '../utils';
 
@@ -17,9 +16,10 @@ refresh();
 function saveNewCustomer(customer: Customer) {
     isCreateOpen.value = false;
 
-    axios.post(Url + 'api/customers', customer)
+    axios.post('api/customers', customer)
         .then(data => customers.value = data.data)
-        .then(() => refresh());
+        .then(() => refresh())
+        .catch(e => alert(e.response.data.message ?? 'Ocorreu um erro interno.'));
 }
 
 function showCreateCustomerModal() {
@@ -27,7 +27,7 @@ function showCreateCustomerModal() {
 }
 
 async function refresh() {
-    return axios.get(Url + 'api/customers')
+    return axios.get('api/customers')
         .then(data => customers.value = data.data)
         .then(() => refreshSystemIcons())
         .catch((e) => alert('Não foi possível listar os quartos. ' + e));

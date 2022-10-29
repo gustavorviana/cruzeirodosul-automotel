@@ -1,16 +1,15 @@
-import { Url } from '../Defaults';
-import Cookies from 'js-cookie';
-import axios from 'axios';
+import { axios } from '../Defaults';
+import { getCookie, setCookie, deleteCookie } from '../Cookie';
 const SESSION = 'session';
-
+console.log(axios.defaults.headers.common);
 export function setCurrentSession(session: Session) {
     const jsonSession = JSON.stringify(session);
 
-    Cookies.set(SESSION, jsonSession);
+    setCookie(SESSION, jsonSession);
 }
 
 export function getCurrentSession() {
-    const jsonSession = Cookies.get(SESSION);
+    const jsonSession = getCookie('session');
     if (jsonSession)
         return JSON.parse(jsonSession) as Session;
 
@@ -22,7 +21,7 @@ export function getCurrentUser() {
 }
 
 export async function loginUser(email: string, password: string) {
-    const response = await axios.post(Url + 'api/login', { email, password });
+    const response = await axios.post('api/login', { email, password });
 
     if (response)
         setCurrentSession(response.data)
@@ -34,7 +33,6 @@ export async function logoutUser() {
     const session = getCurrentSession();
     if (!session?.id)
         return;
-
-    Cookies.remove(SESSION);
-    await axios.post(Url + 'api/logout', { session: session.id });
+    deleteCookie(SESSION);
+    await axios.post('api/logout', { session: session.id });
 }

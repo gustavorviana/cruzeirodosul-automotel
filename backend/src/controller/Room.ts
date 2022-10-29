@@ -2,41 +2,20 @@ import { Request, Response } from "express";
 import { hasBedroomNumber, registerBedroom, getAll, deleteRoom, getRoom } from "../services/BedroomService";
 
 export async function index(req: Request, res: Response) {
-    try {
-        res.json(await getAll(Number(req.body.peerPage ?? 10), Number(req.body.page ?? 1)));
-    } catch (error) {
-        res.status(500).json({
-            message: "Falha ao realizar a listagem de valores.",
-            error
-        });
-    }
+    res.json(await getAll(Number(req.query.peerPage ?? 10), Number(req.query.page ?? 1)));
 };
 
 export async function get(req: Request, res: Response) {
-    try {
-        res.json(await getRoom(Number(req.params.id)));
-    } catch (error) {
-        res.status(500).json({
-            message: "Falha ao realizar a listagem de valores.",
-            error
-        });
-    }
+    res.json(await getRoom(Number(req.params.id)));
 }
 
 export async function deleteRequest(req: Request, res: Response) {
-    try {
-        const id = getRoomId(req);
-        if (id < 1)
-            return res.status(404).json({ message: 'O quarto é inválido.' });
+    const id = getRoomId(req);
+    if (id < 1)
+        return res.status(404).json({ message: 'O quarto é inválido.' });
 
-        await deleteRoom(id);
-        res.json({ message: 'Ok' });
-    } catch (error) {
-        res.status(500).json({
-            message: "Falha ao realizar a listagem de valores.",
-            error
-        });
-    }
+    await deleteRoom(id);
+    res.json({ message: 'Ok' });
 };
 
 export async function register(req: Request, res: Response) {
@@ -51,16 +30,8 @@ export async function register(req: Request, res: Response) {
             message: "Um quarto com esse número já foi registrado."
         });
 
-    try {
-
-        registerBedroom(roomNumber);
-        res.json({ message: 'Ok.' });
-    } catch (error) {
-        res.status(500).json({
-            message: "Falha ao realizar o login",
-            error
-        });
-    }
+    registerBedroom(roomNumber);
+    res.json({ message: 'Ok.' });
 };
 
 function getRoomId(req: Request) {

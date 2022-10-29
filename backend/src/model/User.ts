@@ -49,7 +49,7 @@ User.init({
     }
 }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'user',
     freezeTableName: true,
     createdAt: true,
     timestamps: false
