@@ -3,7 +3,7 @@ import { RouterView } from "vue-router";
 
 function onUpdate() {
   setTimeout(() => {
-    require('./Utils').refreshSystemIcons();
+    try { document.dispatchEvent(new Event("DOMContentLoaded")); } catch (error) { }
   }, 100);
 }
 </script>

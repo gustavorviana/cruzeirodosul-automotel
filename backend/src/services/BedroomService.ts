@@ -14,7 +14,7 @@ export async function registerBedroom(roomNumber: number) {
 }
 
 export async function getAll(peerPage: number, page: number) {
-    const room = await Bedroom.findAll({
+    const rooms = await Bedroom.findAll({
         include: [
             {
                 model: BedroomHistory,
@@ -33,7 +33,30 @@ export async function getAll(peerPage: number, page: number) {
         order: ['number']
     });
 
-    return room.map(translateToFrondBedroom);
+    return rooms.map(translateToFrondBedroom);
+}
+
+export async function getRoom(id: number) {
+    if (id < 1)
+        throw new Error('O quarto não foi encontrado.');
+
+    const room = await Bedroom.findOne({
+        include: [
+            {
+                model: BedroomHistory,
+                required: false,
+                limit: 1,
+                include: [Customer],
+                where: {
+                    leaveAt: {
+                        [Op.is]: null
+                    }
+                }
+            }
+        ]
+    });
+
+    return translateToFrondBedroom(room as any);
 }
 
 export async function deleteRoom(id: number) {

@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { hasBedroomNumber, registerBedroom, getAll, deleteRoom } from "../services/BedroomService";
+import { hasBedroomNumber, registerBedroom, getAll, deleteRoom, getRoom } from "../services/BedroomService";
 
 export async function index(req: Request, res: Response) {
     try {
-
         res.json(await getAll(Number(req.body.peerPage ?? 10), Number(req.body.page ?? 1)));
     } catch (error) {
         res.status(500).json({
@@ -12,6 +11,17 @@ export async function index(req: Request, res: Response) {
         });
     }
 };
+
+export async function get(req: Request, res: Response) {
+    try {
+        res.json(await getRoom(Number(req.params.id)));
+    } catch (error) {
+        res.status(500).json({
+            message: "Falha ao realizar a listagem de valores.",
+            error
+        });
+    }
+}
 
 export async function deleteRequest(req: Request, res: Response) {
     try {

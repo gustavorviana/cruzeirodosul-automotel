@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "@/views/Dashboard.vue";
 import Rooms from "@/views/Rooms.vue";
+import Customer from "@/views/Customer.vue";
 import Login from "@/views/Login.vue";
 import NotFoundPage from "@/views/Errors/404.vue";
 import { getCurrentUser } from "../utils/UserUtils";
@@ -17,6 +18,11 @@ const router = createRouter({
       path: "/quartos",
       name: "Rooms",
       component: Rooms,
+    },
+    {
+      path: "/clientes",
+      name: "Customers",
+      component: Customer,
     },
     {
       path: "/login",

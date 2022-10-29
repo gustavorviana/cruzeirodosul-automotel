@@ -3,6 +3,7 @@ import Card from '@/components/Card.vue';
 import Icon from '@/components/Icon.vue';
 import Layout from '@/components/Layout.vue';
 import Modal from '@/components/Modal.vue';
+import AutoComplete from '@/components/AutoComplete.vue';
 import NumericInput from '@/components/NumericInput.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import PageTitle from '@/components/PageTitle.vue';
@@ -13,8 +14,11 @@ import { toBrDate, refreshSystemIcons } from '../utils';
 
 const isCreateOpen = ref(false);
 const roomNumber = ref<number | string>('');
+const roomOption = ref<Room>();
 
 const rooms = ref<Room[]>([]);
+
+const itens = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 refresh();
 
@@ -59,10 +63,21 @@ function deleteRoom(id: number) {
         .then(() => refresh());
 }
 
+function closeOptionsModal() {
+    roomOption.value = undefined;
+}
+
+function showOptionsModal(id: number) {
+    axios.get(Url + 'api/rooms/' + id)
+        .then(data => roomOption.value = data.data)
+        .catch(() => alert('Não foi possível recuperar informações do quarto.'));
+}
+
 async function refresh() {
     return axios.get(Url + 'api/rooms')
         .then(data => rooms.value = data.data)
-        .then(() => refreshSystemIcons());
+        .then(() => refreshSystemIcons())
+        .catch(() => alert('Não foi possível listar os quartos.'));
 }
 </script>
 
@@ -97,6 +112,9 @@ async function refresh() {
                         </td>
                         <td class="d-none d-md-table-cell">{{ room.ocupationInfo?.timeInfo ?? '-' }}</td>
                         <td class="table-action">
+                            <a href="#" @click="() => showOptionsModal(room.id)">
+                                <Icon icon="settings" />
+                            </a>
                             <a href="#" @click="() => deleteRoom(room.id)">
                                 <Icon icon="trash-2" />
                             </a>
@@ -116,6 +134,16 @@ async function refresh() {
                     @click="cancelCreate">Cancelar</button>
                 <button type="button" class="btn btn-primary" @click="saveNewRoom">Cadastrar</button>
             </template>
+        </Modal>
+        <Modal title="Opções do quarto" :is-open="!!roomOption" @close="closeOptionsModal">
+            <div class="mb-3">
+                <label class="form-label">Cliente ocupando quarto</label>
+                <AutoComplete v-if="roomOption?.ocupationInfo" width="465" :items="itens">
+                    <template #table-tr="{ item }">
+                        {{ item }}
+                    </template>
+                </AutoComplete>
+            </div>
         </Modal>
     </Layout>
 </template>
