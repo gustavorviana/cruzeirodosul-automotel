@@ -3,6 +3,7 @@ import Dashboard from "@/views/Dashboard.vue";
 import Rooms from "@/views/Rooms.vue";
 import Customer from "@/views/Customer.vue";
 import Login from "@/views/Login.vue";
+import Stock from "@/views/Stock.vue";
 import NotFoundPage from "@/views/Errors/404.vue";
 import { getCurrentUser } from "../utils/UserUtils";
 
@@ -28,6 +29,14 @@ const router = createRouter({
       path: "/login",
       name: "Login",
       component: Login,
+      meta: {
+        ignoreLogin: true
+      }
+    },
+    {
+      path: "/estoque",
+      name: "Stock",
+      component: Stock,
       meta: {
         ignoreLogin: true
       }

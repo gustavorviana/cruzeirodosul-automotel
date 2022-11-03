@@ -16,6 +16,13 @@ interface Customer {
     document: string;
 }
 
+interface Stock {
+    id: number;
+    productName: string;
+    quantity: number;
+    price: number;
+}
+
 interface Ocupation {
     startAt: Date;
     customer: Customer;

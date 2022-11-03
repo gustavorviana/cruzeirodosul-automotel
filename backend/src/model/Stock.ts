@@ -11,20 +11,16 @@ export class Stock extends Model {
 Stock.init({
     id: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
-        allowNull: false
+        primaryKey: true
     },
     productName: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
     },
     quantity: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+        type: DataTypes.INTEGER
     },
     price: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+        type: DataTypes.INTEGER
     }
 }, {
     sequelize,

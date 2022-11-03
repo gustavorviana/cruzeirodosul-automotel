@@ -16,11 +16,10 @@ route.use((request, response, next) => {
     response.sendFile(path.resolve(__dirname, '../../../interface/dist/index.html'));
 });
 
-route.use(auth);
-
 route.get('/api', (_, res) => res.json({ message: 'Ok.' }));
 route.post('/api/logar', _(LoginController));
 route.post('/api/deslogar', _(LogoutController));
+route.use(auth);
 
 //Quartos
 route.get('/api/quartos', _(Room.index));
@@ -38,6 +37,9 @@ route.post('/api/clientes', _(Customer.register));
 //Estoque
 route.get('/api/estoque', _(Stock.index));
 route.get('/api/estoque/:id', _(Stock.get));
+route.post('/api/estoque', _(Stock.create));
+route.patch('/api/estoque/:id', _(Stock.update));
+route.delete('/api/estoque/:id', _(Stock.destroy));
 
 function _(route: (req: Request, res: Response) => Promise<any>) {
     return (req: Request, res: Response) => {

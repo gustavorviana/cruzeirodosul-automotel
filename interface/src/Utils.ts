@@ -12,7 +12,7 @@ export function refreshSystemIcons() {
 }
 
 export function showAxiosError(error: AxiosError, defaultMessage: string) {
-    const serverMsg = (error.response?.data as any).message;
+    const serverMsg = (error.response?.data as any)?.message;
     if (serverMsg)
         return alert(serverMsg);
 
