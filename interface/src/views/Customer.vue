@@ -6,7 +6,7 @@ import PageHeader from '@/components/PageHeader.vue';
 import PageTitle from '@/components/PageTitle.vue';
 import { axios } from '@/Defaults';
 import { ref } from 'vue';
-import { refreshSystemIcons } from '../utils';
+import { refreshSystemIcons, showAxiosError } from '../utils';
 
 const isCreateOpen = ref(false);
 const customers = ref<Customer[]>([]);
@@ -16,10 +16,10 @@ refresh();
 function saveNewCustomer(customer: Customer) {
     isCreateOpen.value = false;
 
-    axios.post('api/customers', customer)
+    axios.post('api/clientes', customer)
         .then(data => customers.value = data.data)
         .then(() => refresh())
-        .catch(e => alert(e.response.data.message ?? 'Ocorreu um erro interno.'));
+        .catch((e) => showAxiosError(e, 'Ocorreu um erro interno.'));
 }
 
 function showCreateCustomerModal() {
@@ -27,10 +27,10 @@ function showCreateCustomerModal() {
 }
 
 async function refresh() {
-    return axios.get('api/customers')
+    return axios.get('api/clientes')
         .then(data => customers.value = data.data)
         .then(() => refreshSystemIcons())
-        .catch((e) => alert('Não foi possível listar os quartos. ' + e));
+        .catch((e) => showAxiosError(e, 'Não foi possível listar os quartos. ' + e));
 }
 </script>
 

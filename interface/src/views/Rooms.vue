@@ -8,7 +8,7 @@ import PageHeader from '@/components/PageHeader.vue';
 import PageTitle from '@/components/PageTitle.vue';
 import { axios } from '@/Defaults';
 import { ref } from 'vue';
-import { toBrDate, refreshSystemIcons } from '../utils';
+import { toBrDate, refreshSystemIcons, showAxiosError } from '../utils';
 import RoomOptionsModal from '@/components/Modals/Customer/RoomOptionsModal.vue';
 
 const isCreateOpen = ref(false);
@@ -32,9 +32,10 @@ function saveNewRoom() {
 
     isCreateOpen.value = false;
 
-    axios.post('api/rooms', { roomNumber: roomNumber.value })
+    axios.post('api/quartos', { roomNumber: roomNumber.value })
         .then(data => rooms.value = data.data)
-        .then(() => refresh());
+        .then(() => refresh())
+        .catch((e) => showAxiosError(e, 'Falha ao criar um novo quarto.'));
 }
 
 function hasId(id: number) {
@@ -55,26 +56,28 @@ function deleteRoom(id: number) {
     if (!confirm('Deseja realmente apagar esse quarto ?'))
         return;
 
-    axios.delete('api/rooms', { data: { id } })
+    axios.delete('api/quartos', { data: { id } })
         .then(data => rooms.value = data.data)
-        .then(() => refresh());
+        .then(() => refresh())
+        .catch((e) => showAxiosError(e, 'Não foi possível apagar o quarto.'));
 }
 
 function closeOptionsModal() {
     roomOption.value = undefined;
+    refresh();
 }
 
 function showOptionsModal(id: number) {
-    axios.get('api/rooms/' + id)
+    axios.get('api/quartos/' + id)
         .then(data => roomOption.value = data.data)
-        .catch(() => alert('Não foi possível recuperar informações do quarto.'));
+        .catch((e) => showAxiosError(e, 'Não foi possível recuperar informações do quarto.'));
 }
 
 async function refresh() {
-    return axios.get('api/rooms')
+    return axios.get('api/quartos')
         .then(data => rooms.value = data.data)
         .then(() => refreshSystemIcons())
-        .catch(() => alert('Não foi possível listar os quartos.'));
+        .catch((e) => showAxiosError(e, 'Não foi possível listar os quartos.'));
 }
 </script>
 
@@ -132,6 +135,6 @@ async function refresh() {
                 <button type="button" class="btn btn-primary" @click="saveNewRoom">Cadastrar</button>
             </template>
         </Modal>
-        <RoomOptionsModal :is-open="!!roomOption" @on-cancel="closeOptionsModal" />
+        <RoomOptionsModal :is-open="!!roomOption" :room="roomOption" @on-close="closeOptionsModal" />
     </Layout>
 </template>

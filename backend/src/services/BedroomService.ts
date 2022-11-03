@@ -53,7 +53,10 @@ export async function getRoom(id: number) {
                     }
                 }
             }
-        ]
+        ],
+        where: {
+            id
+        }
     });
 
     return translateToFrondBedroom(room as any);
@@ -82,7 +85,11 @@ function translateToFrondBedroom(bedroom: Bedroom) {
 
 function getOcupationInfo(histories: BedroomHistory[]) {
     if (!histories?.length)
-        return {};
+        return null;
+
+    histories = histories.filter(h => !h.leaveAt);
+    if (!histories.length)
+        return null;
 
     const history = histories[0];
     const timeSpent = new Date().getTime() - history.enterAt.getTime();

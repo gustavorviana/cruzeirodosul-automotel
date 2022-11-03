@@ -1,7 +1,6 @@
 import { axios } from '../Defaults';
 import { getCookie, setCookie, deleteCookie } from '../Cookie';
 const SESSION = 'session';
-console.log(axios.defaults.headers.common);
 export function setCurrentSession(session: Session) {
     const jsonSession = JSON.stringify(session);
 
@@ -21,7 +20,7 @@ export function getCurrentUser() {
 }
 
 export async function loginUser(email: string, password: string) {
-    const response = await axios.post('api/login', { email, password });
+    const response = await axios.post('api/logar', { email, password });
 
     if (response)
         setCurrentSession(response.data)
@@ -34,5 +33,5 @@ export async function logoutUser() {
     if (!session?.id)
         return;
     deleteCookie(SESSION);
-    await axios.post('api/logout', { session: session.id });
+    await axios.post('api/deslogar', { session: session.id });
 }

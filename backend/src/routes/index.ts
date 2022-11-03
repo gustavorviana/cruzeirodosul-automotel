@@ -3,9 +3,9 @@ import path from 'path';
 import LoginController from '../controller/Login';
 import LogoutController from '../controller/Logout';
 import * as Room from '../controller/Room';
-import * as RoomHistory from '../controller/RoomHistory';
+import * as Stock from '../controller/Stock';
 import * as Customer from '../controller/Customer';
-import { getUserFromRequest } from '../services/SessionService';
+import auth from '../middleware/AuthMiddleware';
 
 const route = Router();
 
@@ -16,35 +16,28 @@ route.use((request, response, next) => {
     response.sendFile(path.resolve(__dirname, '../../../interface/dist/index.html'));
 });
 
-route.use((req, res, next) => {
-    if (!req.url.startsWith('/api') || req.url.startsWith('/api/login') || req.url.startsWith('/api/logout'))
-        return next();
-
-    getUserFromRequest(req).then(user => {
-        if (!user)
-            return res.status(401).json({ message: 'Você deve estar logado para essa operação.' });
-        req.user = user;
-        next();
-    }).catch(er =>
-        res.status(500).json(er)
-    );
-});
+route.use(auth);
 
 route.get('/api', (_, res) => res.json({ message: 'Ok.' }));
-route.post('/api/login', _(LoginController));
-route.post('/api/logout', _(LogoutController));
+route.post('/api/logar', _(LoginController));
+route.post('/api/deslogar', _(LogoutController));
 
-route.get('/api/rooms', _(Room.index));
-route.get('/api/rooms/:id', _(Room.get));
-route.post('/api/rooms', _(Room.register));
-route.delete('/api/rooms', _(Room.deleteRequest));
+//Quartos
+route.get('/api/quartos', _(Room.index));
+route.get('/api/quartos/:id', _(Room.get));
+route.post('/api/quartos/:id/desocupar', _(Room.freeRoom));
+route.post('/api/quartos/:id/ocupar', _(Room.setCustommer));
+route.post('/api/quartos', _(Room.register));
+route.delete('/api/quartos', _(Room.deleteRequest));
 
-route.post('/api/rooms/history', _(RoomHistory.register));
-route.put('/api/rooms/history', _(RoomHistory.update));
+//Clientes
+route.get('/api/clientes', _(Customer.index));
+route.get('/api/clientes/:id', _(Customer.get));
+route.post('/api/clientes', _(Customer.register));
 
-route.get('/api/customers', _(Customer.index));
-route.get('/api/customers/:id', _(Customer.get));
-route.post('/api/customers', _(Customer.register));
+//Estoque
+route.get('/api/estoque', _(Stock.index));
+route.get('/api/estoque/:id', _(Stock.get));
 
 function _(route: (req: Request, res: Response) => Promise<any>) {
     return (req: Request, res: Response) => {

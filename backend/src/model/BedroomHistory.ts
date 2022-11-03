@@ -15,29 +15,23 @@ export class BedroomHistory extends Model {
 BedroomHistory.init({
     id: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
-        allowNull: false
+        primaryKey: true
     },
     customerId: DataTypes.INTEGER,
     userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+        type: DataTypes.INTEGER
     },
     bedroomId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+        type: DataTypes.INTEGER
     },
     enterAt: {
-        type: DataTypes.DATE,
-        allowNull: false
+        type: DataTypes.DATE
     },
     cleanedAt: {
-        type: DataTypes.DATE,
-        allowNull: false
+        type: DataTypes.DATE
     },
     leaveAt: {
-        type: DataTypes.DATE,
-        allowNull: false
+        type: DataTypes.DATE
     }
 }, {
     sequelize,
@@ -46,5 +40,4 @@ BedroomHistory.init({
     timestamps: false
 });
 
-// BedroomHistory.hasOne(User, { sourceKey: 'userId', foreignKey: 'id' });
 BedroomHistory.hasOne(Customer, { sourceKey: 'customerId', foreignKey: 'id' });

@@ -1,7 +1,6 @@
 import express from 'express';
 import route from './routes';
 import cors from 'cors';
-import auth from './middleware/AuthMiddleware';
 import db from './config/db'
 import { configureGroups, configureUsers } from './config/ModelConfig';
 
@@ -19,7 +18,6 @@ export default async function () {
     console.log("Registrando middlewares...");
 
     app.use(cors());
-    app.use(auth);
     app.use(express.json())
     app.use(express.static('../interface/dist'));
 

@@ -21,12 +21,27 @@ export async function createHistory(userId: number, idCustomer: number, idBedroo
     });
 }
 
+export async function freeBedroom(id: number) {
+    if (!await isBedroomInUse(id))
+        throw new Error("O quarto não está ocupado.");
+
+    await BedroomHistory.update({ leaveAt: new Date() }, {
+        where: {
+            leaveAt: {
+                [Op.is]: null
+            },
+            bedroomId: id
+        }
+    });
+}
+
 export async function isBedroomInUse(id: number) {
     return await BedroomHistory.count({
         where: {
-            enterAt: {
-                [Op.not]: null
-            }
+            leaveAt: {
+                [Op.is]: null
+            },
+            bedroomId: id
         }
     }) > 0;
 }
