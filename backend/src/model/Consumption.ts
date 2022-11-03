@@ -1,25 +1,24 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/db';
+import { Stock } from './Stock';
 
 export class Consumption extends Model {
     declare id: number;
     declare stockId: number;
-    declare bedroomId: number;
-    declare customerId: number;
-    declare quantityId: number;
+    declare bedroomHistoryId: number;
+    declare quantity: number;
+    declare Stock: Stock;
 }
 
 Consumption.init({
     stockId: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
-        allowNull: false
+        primaryKey: true
     },
-    bedroomId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+    bedroomHistoryId: {
+        type: DataTypes.INTEGER
     },
-    customerId: {
+    quantity: {
         type: DataTypes.DATE,
         allowNull: false
     }
@@ -29,3 +28,5 @@ Consumption.init({
     freezeTableName: true,
     timestamps: false
 });
+
+Consumption.hasOne(Stock, { sourceKey: 'stockId', foreignKey: 'id' })

@@ -1,8 +1,10 @@
 import { Op } from "sequelize";
-import { Ocupation, Room } from "../Declarations";
+import { FrontConsumption, Ocupation, Room } from "../Declarations";
 import { Bedroom } from "../model/Bedroom";
 import { BedroomHistory } from "../model/BedroomHistory";
+import { Consumption } from "../model/Consumption";
 import { Customer } from "../model/Customer";
+import { Stock } from "../model/Stock";
 import { TimeService } from "./TimeService";
 
 export async function hasBedroomNumber(roomNumber: number) {
@@ -46,7 +48,10 @@ export async function getRoom(id: number) {
                 model: BedroomHistory,
                 required: false,
                 limit: 1,
-                include: [Customer],
+                include: [Customer, {
+                    model: Consumption,
+                    include: [Stock]
+                }],
                 where: {
                     leaveAt: {
                         [Op.is]: null
@@ -76,22 +81,19 @@ export async function existBedroom(id: number) {
 }
 
 function translateToFrondBedroom(bedroom: Bedroom) {
+    const history = getActiveHistory(bedroom.bedroomhistories);
     return {
         id: bedroom.id,
         roomNumber: bedroom.number,
-        ocupationInfo: getOcupationInfo(bedroom.bedroomhistories)
+        ocupationInfo: getOcupationInfo(history),
+        consumptions: getConsupmition(history)
     } as Room;
 }
 
-function getOcupationInfo(histories: BedroomHistory[]) {
-    if (!histories?.length)
+function getOcupationInfo(history: BedroomHistory | null) {
+    if (!history)
         return null;
 
-    histories = histories.filter(h => !h.leaveAt);
-    if (!histories.length)
-        return null;
-
-    const history = histories[0];
     const timeSpent = new Date().getTime() - history.enterAt.getTime();
 
     return {
@@ -99,4 +101,32 @@ function getOcupationInfo(histories: BedroomHistory[]) {
         startAt: history.enterAt,
         timeInfo: new TimeService(timeSpent).info
     } as Ocupation;
+}
+
+function getActiveHistory(histories: BedroomHistory[]) {
+    if (!histories?.length)
+        return null;
+
+    histories = histories.filter(h => !h.leaveAt);
+    if (!histories.length)
+        return null;
+
+    return histories[0];
+}
+
+function getConsupmition(history: BedroomHistory | null) {
+    if (!history)
+        return [];
+
+    return history.Consumptions.map(parseConsumption);
+}
+
+function parseConsumption(consumption: Consumption) {
+
+    return {
+        id: consumption.id,
+        name: consumption.Stock.productName,
+        quantity: consumption.quantity,
+        total: consumption.quantity * consumption.Stock.price
+    } as FrontConsumption;
 }

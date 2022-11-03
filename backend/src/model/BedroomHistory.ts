@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/db';
+import { Consumption } from './Consumption';
 import { Customer } from './Customer';
 import { User } from './User';
 
@@ -10,6 +11,7 @@ export class BedroomHistory extends Model {
     declare enterAt: Date;
     declare cleanedAt: Date;
     declare leaveAt: Date;
+    declare Consumptions: Consumption[];
 }
 
 BedroomHistory.init({
@@ -41,3 +43,4 @@ BedroomHistory.init({
 });
 
 BedroomHistory.hasOne(Customer, { sourceKey: 'customerId', foreignKey: 'id' });
+BedroomHistory.hasMany(Consumption, { sourceKey: 'id', foreignKey: 'bedroomHistoryId' });
