@@ -2,7 +2,7 @@ import * as Stock from '../services/StockService';
 import { Request, Response } from "express";
 
 export async function index(req: Request, res: Response) {
-    res.json(await Stock.getAll());
+    res.json(await Stock.getAll(req.query.name as string));
 }
 
 export async function get(req: Request, res: Response) {
@@ -10,7 +10,7 @@ export async function get(req: Request, res: Response) {
     if (id < 1)
         return res.status(400).json({ message: 'O id é inválido.' });
 
-    const item = await Stock.get(id);
+    const item = await Stock.getStock(id);
     if (item)
         return res.json(item);
 
@@ -36,6 +36,6 @@ export async function update(req: Request, res: Response) {
     if (id < 1)
         return res.status(400).json({ message: 'O id é inválido.' });
 
-    await Stock.update(id, req.body.name, Number(req.body.quantity), Number(req.body.price));
+    await Stock.update(id, req.body.productName, Number(req.body.quantity), Number(req.body.price));
     res.json({ message: 'Ok' });
 }

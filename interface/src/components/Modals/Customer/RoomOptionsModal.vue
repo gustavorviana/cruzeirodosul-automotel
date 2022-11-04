@@ -1,39 +1,21 @@
 <script lang="ts" setup>
 import Modal from '@/components/Modal.vue';
-import AutoComplete from '@/components/AutoComplete.vue';
 import InputGroup from '@/components/Form/InputGroup.vue';
 import { ref } from 'vue';
 import { axios } from '@/Defaults';
 import { showAxiosError } from '@/utils';
+import CustomerAutoComplete from '@/components/CustomerAutoComplete.vue';
+import StockAutoComplete from '@/components/StockAutoComplete.vue';
 
 const props = defineProps<{
     isOpen: boolean,
     room?: Room
 }>()
 const selectedCustomer = ref<Customer>();
-const searchCustomers = ref<Customer[]>([]);
-const searchCustomersTitle = ref<string[]>([]);
+const selectedStock = ref<Stock>();
+const qtdItemStock = ref<string>('1');
 
 const emit = defineEmits(['onClose']);
-function onCustomerTextChange(e: KeyboardEvent) {
-    const text = (e.target as HTMLInputElement).value;
-    if (!text)
-        return searchCustomers.value = [];
-
-    axios.get(`api/clientes?name=${encodeURI(text)}`)
-        .then(r => {
-            searchCustomers.value = r.data
-            searchCustomersTitle.value = searchCustomers.value.map(i => `#${i.id} - ${i.name} (${i.document})`);
-        })
-        .catch(e => {
-            searchCustomers.value = [];
-            showAxiosError(e, 'Falha ao recuperar os clientes');
-        });
-}
-
-function select(index: number) {
-    selectedCustomer.value = searchCustomers.value[index];
-}
 
 function liberarQuarto() {
     if (!confirm('Deseja realmente liberar o quarto ?'))
@@ -56,17 +38,44 @@ function ocuparQuarto() {
         .catch((e) => showAxiosError(e, 'Não foi possível ocupar o quarto.'));
 }
 
+function addStockProduct() {
+    const qtd = Number(qtdItemStock.value);
+    if (Number.isNaN(qtd) || qtd < 1)
+        return alert('Você pode adicionar no mínimo 1 produto.');
+
+    if (!selectedStock.value)
+        return alert('Um produto deve ser selecionado.');
+
+    if (!confirm(`Deseja realmente adicionar o produto ${selectedStock.value?.productName} ?`))
+        return;
+
+    axios.post(`api/quartos/${props.room?.id}/consumir`, { idQuarto: props.room?.id, idProduto: selectedStock.value?.id, quantity: qtd })
+        .then(() => {
+            emit('onClose');
+            selectedStock.value = undefined;
+        })
+        .catch((e) => showAxiosError(e, 'Não foi possível adicionar o produto na lista de consumidos.'));
+}
+
 </script>
 
 <template>
     <Modal title="Opções do quarto" :is-open="isOpen" @close="() => emit('onClose')">
         <InputGroup v-if="!props.room?.ocupationInfo" header="Cliente que vai ocupar o quarto">
-            <AutoComplete width="465" :items="searchCustomersTitle" @select="select"
-                @text-change="onCustomerTextChange" />
+            <CustomerAutoComplete @on-select="c => selectedCustomer = c" />
         </InputGroup>
 
         <div v-if="props.room?.ocupationInfo">
             <h5>Produtos consumidos</h5>
+            <InputGroup v-if="props.room?.ocupationInfo" header="Adicionar produto">
+                <div style="display: flex;">
+                    <StockAutoComplete style="width: 100%;" @on-select="item => selectedStock = item" />
+                    <input class="form-control" placeholder="Qtd" type="number" v-model="qtdItemStock"
+                        style="width: 80px; margin-left: 10px;" min="1" />
+
+                    <button style="margin-left: 10px;" class="btn btn-warning" @click="addStockProduct">Add</button>
+                </div>
+            </InputGroup>
             <table class="table">
                 <thead>
                     <tr>

@@ -1,10 +1,20 @@
+import { Op } from "sequelize";
 import { Stock } from "../model/Stock";
 
-export async function getAll() {
-    return await Stock.findAll();
+export async function getAll(name: string) {
+    if (name === undefined)
+        name = '';
+        
+    return await Stock.findAll({
+        where: {
+            productName: {
+                [Op.like]: `%${name}%`
+            }
+        }
+    });
 }
 
-export async function get(id: number) {
+export async function getStock(id: number) {
     return await Stock.findByPk(id);
 }
 
@@ -37,8 +47,8 @@ export async function hasStockItem(id: number) {
     await Stock.count({ where: { id } }) > 0;
 }
 
-export async function discount(id: number, qtd: number) {
-    const item = await get(id);
+export async function descontarDoEstoque(id: number, qtd: number) {
+    const item = await getStock(id);
     if (!item)
         throw new Error("O item não foi encontrado.");
 

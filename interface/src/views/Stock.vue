@@ -15,11 +15,13 @@ const stockItems = ref<Stock[]>([]);
 
 refresh();
 
-function saveItem(customer: Stock) {
+function saveItem(stock: Stock) {
     isCreateOpen.value = false;
 
     if (toUpdate.value) {
-        axios.patch('api/estoque/' + toUpdate.value.id, customer)
+        console.log(stock);
+        
+        axios.patch('api/estoque/' + toUpdate.value.id, stock)
             .then(data => stockItems.value = data.data)
             .then(() => refresh())
             .catch((e) => showAxiosError(e, 'Ocorreu um erro interno.'));
@@ -28,7 +30,7 @@ function saveItem(customer: Stock) {
         return;
     }
 
-    axios.post('api/estoque', customer)
+    axios.post('api/estoque', stock)
         .then(data => stockItems.value = data.data)
         .then(() => refresh())
         .catch((e) => showAxiosError(e, 'Ocorreu um erro interno.'));
@@ -81,7 +83,7 @@ async function refresh() {
                     <tr v-for="item in stockItems">
                         <td>{{ item.productName }}</td>
                         <td class="d-none d-md-table-cell">{{ item.quantity }}</td>
-                        <td class="d-none d-md-table-cell">{{ item.price.toLocaleString('pt-br', {
+                        <td class="d-none d-md-table-cell">{{ item.price?.toLocaleString('pt-br', {
                                 style: 'currency',
                                 currency: 'BRL'
                             })

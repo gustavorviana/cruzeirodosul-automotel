@@ -26,6 +26,7 @@ route.get('/api/quartos', _(Room.index));
 route.get('/api/quartos/:id', _(Room.get));
 route.post('/api/quartos/:id/desocupar', _(Room.freeRoom));
 route.post('/api/quartos/:id/ocupar', _(Room.setCustommer));
+route.post('/api/quartos/:id/consumir', _(Room.consumirProduto));
 route.post('/api/quartos', _(Room.register));
 route.delete('/api/quartos', _(Room.deleteRequest));
 

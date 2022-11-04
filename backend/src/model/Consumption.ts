@@ -12,15 +12,13 @@ export class Consumption extends Model {
 
 Consumption.init({
     stockId: {
-        type: DataTypes.INTEGER,
-        primaryKey: true
+        type: DataTypes.INTEGER
     },
     bedroomHistoryId: {
         type: DataTypes.INTEGER
     },
     quantity: {
-        type: DataTypes.DATE,
-        allowNull: false
+        type: DataTypes.DATE
     }
 }, {
     sequelize,

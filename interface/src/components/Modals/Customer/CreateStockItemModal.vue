@@ -6,6 +6,7 @@ const name = ref<string>('');
 const quantity = ref<string>('');
 const price = ref<string>('');
 
+let lastStock = null;
 let isOpen = false;
 const props = defineProps<{
     isCreateOpen: boolean,
@@ -23,6 +24,7 @@ function save() {
 
     if (nameSize < 3)
         return alert('O nome deve ter pelo menos 3 caracteres.');
+
     if (nameSize > 255)
         return alert('O nome deve ter no máximo 255 caracteres.');
 
