@@ -115,7 +115,7 @@ function getActiveHistory(histories: BedroomHistory[]) {
 }
 
 function getConsupmition(history: BedroomHistory | null) {
-    if (!history)
+    if (!history?.Consumptions)
         return [];
 
     return history.Consumptions.map(parseConsumption);

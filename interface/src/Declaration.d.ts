@@ -26,12 +26,18 @@ interface Stock {
 interface Ocupation {
     startAt: Date;
     customer: Customer;
-
     timeInfo: string;
+}
+
+interface Consumption {
+    name: string;
+    quantity: number;
+    total: number;
 }
 
 interface Room {
     id: number;
     roomNumber: number;
     ocupationInfo: Ocupation | null;
+    consumptions: Consumptio[];
 }

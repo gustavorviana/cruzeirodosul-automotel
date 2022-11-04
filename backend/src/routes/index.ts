@@ -45,6 +45,7 @@ function _(route: (req: Request, res: Response) => Promise<any>) {
     return (req: Request, res: Response) => {
         route(req, res).catch((error: Error) => {
             try {
+                console.error(error);
                 res.status(500).json({ message: error.message });
             } catch (error) {
 

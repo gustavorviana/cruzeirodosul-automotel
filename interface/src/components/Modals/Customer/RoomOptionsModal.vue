@@ -65,6 +65,27 @@ function ocuparQuarto() {
                 @text-change="onCustomerTextChange" />
         </InputGroup>
 
+        <div v-if="props.room?.ocupationInfo">
+            <h5>Produtos consumidos</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th class="d-none d-md-table-cell">Qtd.</th>
+                        <th>R$ total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in room?.consumptions">
+                        <td>{{ item.name }}</td>
+                        <td class="d-none d-md-table-cell">{{ item.quantity }}
+                        </td>
+                        <td class="d-none d-md-table-cell">{{ item.total }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <template v-slot:button>
             <button v-if="!!props.room?.ocupationInfo" class="btn btn-warning" @click="liberarQuarto">Liberar
                 quarto</button>

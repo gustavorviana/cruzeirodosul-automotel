@@ -1,10 +1,13 @@
-import axiosImport from 'axios';
+import axiosImport, { type AxiosStatic } from 'axios';
 import { getCurrentSession } from './utils/UserUtils';
 export const Url = "http://localhost:3000/";
+declare global {
+    var axios: AxiosStatic;
+}
 
-const instance = axiosImport.create();
+globalThis.axios = axiosImport.create() as any;
 
-instance.defaults.baseURL = Url;
-instance.defaults.headers.common['session'] = getCurrentSession()?.id as any;
+globalThis.axios.defaults.baseURL = Url;
+globalThis.axios.defaults.headers.common['session'] = getCurrentSession()?.id as any;
 
-export const axios = instance;
+export const axios = globalThis.axios;

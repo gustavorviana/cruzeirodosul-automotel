@@ -4,6 +4,7 @@ const SESSION = 'session';
 export function setCurrentSession(session: Session) {
     const jsonSession = JSON.stringify(session);
 
+    globalThis.axios.defaults.headers.common['session'] = session.id;
     setCookie(SESSION, jsonSession);
 }
 
