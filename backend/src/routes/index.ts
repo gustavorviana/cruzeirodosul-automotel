@@ -3,6 +3,7 @@ import path from 'path';
 import LoginController from '../controller/Login';
 import LogoutController from '../controller/Logout';
 import * as Room from '../controller/Room';
+import * as Consumo from '../controller/Consumos';
 import * as Stock from '../controller/Stock';
 import * as Customer from '../controller/Customer';
 import auth from '../middleware/AuthMiddleware';
@@ -26,7 +27,6 @@ route.get('/api/quartos', _(Room.index));
 route.get('/api/quartos/:id', _(Room.get));
 route.post('/api/quartos/:id/desocupar', _(Room.freeRoom));
 route.post('/api/quartos/:id/ocupar', _(Room.setCustommer));
-route.post('/api/quartos/:id/consumir', _(Room.consumirProduto));
 route.post('/api/quartos', _(Room.register));
 route.delete('/api/quartos', _(Room.deleteRequest));
 
@@ -41,6 +41,10 @@ route.get('/api/estoque/:id', _(Stock.get));
 route.post('/api/estoque', _(Stock.create));
 route.patch('/api/estoque/:id', _(Stock.update));
 route.delete('/api/estoque/:id', _(Stock.destroy));
+
+//Consumos
+route.get('/api/consumos/:idQuarto', _(Consumo.get));
+route.post('/api/consumos', _(Consumo.consumirProduto));
 
 function _(route: (req: Request, res: Response) => Promise<any>) {
     return (req: Request, res: Response) => {

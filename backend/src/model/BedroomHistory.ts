@@ -44,3 +44,4 @@ BedroomHistory.init({
 
 BedroomHistory.hasOne(Customer, { sourceKey: 'customerId', foreignKey: 'id' });
 BedroomHistory.hasMany(Consumption, { sourceKey: 'id', foreignKey: 'bedroomHistoryId' });
+Consumption.belongsTo(BedroomHistory, { foreignKey: 'bedroomHistoryId', targetKey: 'id' });

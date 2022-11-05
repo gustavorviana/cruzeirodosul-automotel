@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createHistory, freeBedroom, isBedroomInUse, addProdutoConsumido } from "../services/BedroomHistoryService";
+import { createHistory, freeBedroom, isBedroomInUse } from "../services/BedroomHistoryService";
 import { hasBedroomNumber, registerBedroom, getAll, deleteRoom, getRoom } from "../services/BedroomService";
 
 export async function index(req: Request, res: Response) {
@@ -41,24 +41,6 @@ export async function setCustommer(req: Request, res: Response) {
         return res.status(400).json({ message: 'O cliente é inválido.' });
 
     await createHistory(req.user?.id as any, idCustomer, id);
-    res.json({ message: 'Ok.' });
-}
-
-export async function consumirProduto(req: Request, res: Response) {
-    const id = Number(req.body.idQuarto);
-    const idProduto = Number(req.body.idProduto);
-    const qtd = Number(req.body.quantity);
-
-    if (id < 1)
-        return res.status(400).json({ message: 'O quarto é inválido.' });
-
-    if (idProduto < 1)
-        return res.status(400).json({ message: 'O produto é inválido.' });
-
-    if (qtd < 1)
-        return res.status(400).json({ message: 'A quantidade deve ser no mínimo 1.' });
-
-    await addProdutoConsumido(id, idProduto, qtd);
     res.json({ message: 'Ok.' });
 }
 

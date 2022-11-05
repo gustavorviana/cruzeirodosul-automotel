@@ -39,5 +39,4 @@ interface Room {
     id: number;
     roomNumber: number;
     ocupationInfo: Ocupation | null;
-    consumptions: Consumptio[];
 }

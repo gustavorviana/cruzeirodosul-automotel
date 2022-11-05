@@ -48,39 +48,6 @@ export async function isBedroomInUse(id: number) {
     }) > 0;
 }
 
-export async function addProdutoConsumido(idQuarto: number, idProduto: number, qtd: number) {
-    const history = await getHistory(idQuarto);
-    if (!history)
-        throw new Error("O quarto não foi encontrado.");
-
-    const product = await getStock(idProduto);
-    if (!product)
-        throw new Error("O produto não foi encontrado.");
-
-    const result = await getRoomConsupmition(history.id, idProduto);
-    result.quantity += qtd;
-    result.save();
-
-    await descontarDoEstoque(idQuarto, 1);
-}
-
-async function getRoomConsupmition(idHistory: number, idProduto: number) {
-    let result = await Consumption.findOne({
-        where: {
-            bedroomHistoryId: idHistory,
-            stockId: idProduto
-        }
-    });
-    if (result)
-        return result;
-
-    return await Consumption.create({
-        stockId: idProduto,
-        bedroomHistoryId: idHistory,
-        quantity: 0
-    });
-}
-
 export async function getHistory(idQuarto: number) {
     return await BedroomHistory.findOne({
         where: {

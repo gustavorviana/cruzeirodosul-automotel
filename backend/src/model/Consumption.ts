@@ -18,7 +18,7 @@ Consumption.init({
         type: DataTypes.INTEGER
     },
     quantity: {
-        type: DataTypes.DATE
+        type: DataTypes.INTEGER
     }
 }, {
     sequelize,

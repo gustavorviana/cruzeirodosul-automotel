@@ -48,10 +48,7 @@ export async function getRoom(id: number) {
                 model: BedroomHistory,
                 required: false,
                 limit: 1,
-                include: [Customer, {
-                    model: Consumption,
-                    include: [Stock]
-                }],
+                include: [Customer],
                 where: {
                     leaveAt: {
                         [Op.is]: null
@@ -85,8 +82,7 @@ function translateToFrondBedroom(bedroom: Bedroom) {
     return {
         id: bedroom.id,
         roomNumber: bedroom.number,
-        ocupationInfo: getOcupationInfo(history),
-        consumptions: getConsupmition(history)
+        ocupationInfo: getOcupationInfo(history)
     } as Room;
 }
 
@@ -112,21 +108,4 @@ function getActiveHistory(histories: BedroomHistory[]) {
         return null;
 
     return histories[0];
-}
-
-function getConsupmition(history: BedroomHistory | null) {
-    if (!history?.Consumptions)
-        return [];
-
-    return history.Consumptions.map(parseConsumption);
-}
-
-function parseConsumption(consumption: Consumption) {
-
-    return {
-        id: consumption.id,
-        name: consumption.Stock.productName,
-        quantity: consumption.quantity,
-        total: consumption.quantity * consumption.Stock.price
-    } as FrontConsumption;
 }

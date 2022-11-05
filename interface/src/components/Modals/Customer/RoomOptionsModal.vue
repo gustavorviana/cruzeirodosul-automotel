@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Modal from '@/components/Modal.vue';
 import InputGroup from '@/components/Form/InputGroup.vue';
-import { ref } from 'vue';
+import { onUpdated, ref } from 'vue';
 import { axios } from '@/Defaults';
 import { showAxiosError } from '@/utils';
 import CustomerAutoComplete from '@/components/CustomerAutoComplete.vue';
@@ -11,6 +11,8 @@ const props = defineProps<{
     isOpen: boolean,
     room?: Room
 }>()
+let lastIsOpen = false;
+const consumos = ref<Consumption[]>();
 const selectedCustomer = ref<Customer>();
 const selectedStock = ref<Stock>();
 const qtdItemStock = ref<string>('1');
@@ -49,14 +51,27 @@ function addStockProduct() {
     if (!confirm(`Deseja realmente adicionar o produto ${selectedStock.value?.productName} ?`))
         return;
 
-    axios.post(`api/quartos/${props.room?.id}/consumir`, { idQuarto: props.room?.id, idProduto: selectedStock.value?.id, quantity: qtd })
-        .then(() => {
-            emit('onClose');
-            selectedStock.value = undefined;
-        })
+    axios.post(`api/consumos`, { idQuarto: props.room?.id, idProduto: selectedStock.value?.id, quantity: qtd })
+        .then(() => refreshConsumos())
         .catch((e) => showAxiosError(e, 'Não foi possível adicionar o produto na lista de consumidos.'));
 }
 
+onUpdated(() => {
+    if (lastIsOpen == props.isOpen)
+        return;
+
+    lastIsOpen = props.isOpen;
+
+    if (lastIsOpen && props.room?.id)
+        refreshConsumos();
+
+});
+
+function refreshConsumos() {
+    return axios.get(`api/consumos/${props.room?.id}`)
+        .then(data => consumos.value = data.data)
+        .catch((e) => showAxiosError(e, 'Não foi possível listar os items do estoque. ' + e));
+}
 </script>
 
 <template>
@@ -85,11 +100,15 @@ function addStockProduct() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in room?.consumptions">
+                    <tr v-for="item in consumos">
                         <td>{{ item.name }}</td>
                         <td class="d-none d-md-table-cell">{{ item.quantity }}
                         </td>
-                        <td class="d-none d-md-table-cell">{{ item.total }}</td>
+                        <td class="d-none d-md-table-cell">{{ item.total.toLocaleString('pt-br', {
+                                style: 'currency',
+                                currency: 'BRL'
+                            })
+                        }}</td>
                     </tr>
                 </tbody>
             </table>

@@ -17,10 +17,10 @@ function onCustomerTextChange(e: KeyboardEvent) {
     axios.get(`api/estoque?name=${encodeURI(text)}`)
         .then(r => {
             searchStockItems.value = r.data
-            searchStockTitle.value = searchStockItems.value.map(i => `#${i.id} - ${i.productName} (${i.price.toLocaleString('pt-br', {
+            searchStockTitle.value = searchStockItems.value.map(i => `#${i.id} - ${i.productName} (Qtd. ${i.quantity}) ${i.price.toLocaleString('pt-br', {
                                 style: 'currency',
                                 currency: 'BRL'
-                            })})`);
+                            })}`);
         })
         .catch(e => {
             searchStockItems.value = [];
