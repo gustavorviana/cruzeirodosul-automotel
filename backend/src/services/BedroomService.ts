@@ -1,10 +1,9 @@
 import { Op } from "sequelize";
-import { FrontConsumption, Ocupation, Room } from "../Declarations";
+import { Ocupation, Room } from "../Declarations";
 import { Bedroom } from "../model/Bedroom";
 import { BedroomHistory } from "../model/BedroomHistory";
-import { Consumption } from "../model/Consumption";
 import { Customer } from "../model/Customer";
-import { Stock } from "../model/Stock";
+import { deleteHistoryByRoom } from "./BedroomHistoryService";
 import { TimeService } from "./TimeService";
 
 export async function hasBedroomNumber(roomNumber: number) {
@@ -35,7 +34,12 @@ export async function getAll(peerPage: number, page: number) {
         order: ['number']
     });
 
-    return rooms.map(translateToFrondBedroom);
+    let mappedRooms = [];
+
+    for (let i = 0; i < rooms.length; i++)
+        mappedRooms.push(await translateToFrondBedroom(rooms[i]));
+
+    return mappedRooms;
 }
 
 export async function getRoom(id: number) {
@@ -61,11 +65,14 @@ export async function getRoom(id: number) {
         }
     });
 
-    return translateToFrondBedroom(room as any);
+    if (!room)
+        return null;
+
+    return await translateToFrondBedroom(room as any);
 }
 
 export async function deleteRoom(id: number) {
-    await BedroomHistory.destroy({ where: { bedroomId: id } });
+    await deleteHistoryByRoom(id);
     await Bedroom.destroy({ where: { id } });
 }
 
@@ -77,13 +84,25 @@ export async function existBedroom(id: number) {
     }) > 0;
 }
 
-function translateToFrondBedroom(bedroom: Bedroom) {
+async function translateToFrondBedroom(bedroom: Bedroom) {
     const history = getActiveHistory(bedroom.bedroomhistories);
     return {
         id: bedroom.id,
         roomNumber: bedroom.number,
-        ocupationInfo: getOcupationInfo(history)
+        ocupationInfo: getOcupationInfo(history),
+        cleared: await isCleared(bedroom.id)
     } as Room;
+}
+
+async function isCleared(idBedroom: number) {
+    return await BedroomHistory.count({
+        where: {
+            bedroomId: idBedroom,
+            cleanedAt:{
+                [Op.is]: null
+            }
+        }
+    }) == 0;
 }
 
 function getOcupationInfo(history: BedroomHistory | null) {

@@ -43,7 +43,6 @@ async function getRoomConsupmition(idHistory: number, idProduto: number) {
     });
 }
 
-
 export async function getConsumoFromRoomOpenHistory(idQuarto: number) {
     const consumos = await Consumption.findAll({
         include: [Stock, {
@@ -68,4 +67,18 @@ function parseConsumption(consumption: Consumption) {
         quantity: consumption.quantity,
         total: consumption.quantity * consumption.Stock.price
     } as FrontConsumption;
+}
+export async function deleteConsumoByRoom(idQuarto: number) {
+    const items = await Consumption.findAll({
+        include: [Stock, {
+            model: BedroomHistory,
+            where: {
+                bedroomId: idQuarto
+            },
+            required: true
+        }]
+    });
+
+    for (let index = 0; index < items.length; index++)
+        await items[index].destroy();
 }

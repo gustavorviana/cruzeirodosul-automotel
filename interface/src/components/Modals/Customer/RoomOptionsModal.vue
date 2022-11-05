@@ -17,7 +17,7 @@ const selectedCustomer = ref<Customer>();
 const selectedStock = ref<Stock>();
 const qtdItemStock = ref<string>('1');
 
-const emit = defineEmits(['onClose']);
+const emit = defineEmits(['onClose', 'refresh']);
 
 function liberarQuarto() {
     if (!confirm('Deseja realmente liberar o quarto ?'))
@@ -38,6 +38,15 @@ function ocuparQuarto() {
     axios.post(`api/quartos/${props.room?.id}/ocupar`, { idCustomer: selectedCustomer.value.id })
         .then(() => emit('onClose'))
         .catch((e) => showAxiosError(e, 'Não foi possível ocupar o quarto.'));
+}
+
+function limparQuarto() {
+    axios.post(`api/quartos/${props.room?.id}/limpar`)
+        .then(() => {
+            emit('onClose');
+            alert('Quarto limpo com sucesso');
+        })
+        .catch((e) => showAxiosError(e, 'Não foi possível sinalizar que o quarto foi limpo. ' + e));
 }
 
 function addStockProduct() {
@@ -65,6 +74,9 @@ onUpdated(() => {
     if (lastIsOpen && props.room?.id)
         refreshConsumos();
 
+    if (!lastIsOpen) {
+
+    }
 });
 
 function refreshConsumos() {
@@ -76,9 +88,11 @@ function refreshConsumos() {
 
 <template>
     <Modal title="Opções do quarto" :is-open="isOpen" @close="() => emit('onClose')">
-        <InputGroup v-if="!props.room?.ocupationInfo" header="Cliente que vai ocupar o quarto">
+        <InputGroup v-if="!props.room?.ocupationInfo && props.room?.cleared" header="Cliente que vai ocupar o quarto">
             <CustomerAutoComplete @on-select="c => selectedCustomer = c" />
         </InputGroup>
+
+        <p v-if="!props.room?.ocupationInfo && !props.room?.cleared">O quarto foi desocupado mas ainda não foi limpo</p>
 
         <div v-if="props.room?.ocupationInfo">
             <h5>Produtos consumidos</h5>
@@ -117,9 +131,12 @@ function refreshConsumos() {
         <template v-slot:button>
             <button v-if="!!props.room?.ocupationInfo" class="btn btn-warning" @click="liberarQuarto">Liberar
                 quarto</button>
-            <button v-if="!props.room?.ocupationInfo" class="btn btn-warning" @click="ocuparQuarto"
-                :disabled="!selectedCustomer">Ocupar
+            <button v-if="!props.room?.ocupationInfo && props.room?.cleared" class="btn btn-warning"
+                @click="ocuparQuarto" :disabled="!selectedCustomer">Ocupar
                 quarto</button>
+
+            <button v-if="!props.room?.ocupationInfo && !props.room?.cleared" class="btn btn-warning"
+                @click="limparQuarto">Limpar o quarto</button>
         </template>
     </Modal>
 </template>

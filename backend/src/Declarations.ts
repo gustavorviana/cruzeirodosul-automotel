@@ -27,4 +27,5 @@ export interface Room {
     roomNumber: number;
     ocupationInfo: Ocupation | null;
     consumptions: FrontConsumption[];
+    cleared: boolean;
 }

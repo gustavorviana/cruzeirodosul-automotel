@@ -135,6 +135,6 @@ async function refresh() {
                 <button type="button" class="btn btn-primary" @click="saveNewRoom">Cadastrar</button>
             </template>
         </Modal>
-        <RoomOptionsModal :is-open="!!roomOption" :room="roomOption" @on-close="closeOptionsModal" />
+        <RoomOptionsModal :is-open="!!roomOption" :room="roomOption" @on-close="closeOptionsModal" @refresh="refresh"/>
     </Layout>
 </template>

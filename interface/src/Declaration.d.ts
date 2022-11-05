@@ -39,4 +39,5 @@ interface Room {
     id: number;
     roomNumber: number;
     ocupationInfo: Ocupation | null;
+    cleared: boolean;
 }

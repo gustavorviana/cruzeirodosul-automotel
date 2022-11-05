@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createHistory, freeBedroom, isBedroomInUse } from "../services/BedroomHistoryService";
+import { createHistory, freeBedroom, isBedroomInUse, signalCleared } from "../services/BedroomHistoryService";
 import { hasBedroomNumber, registerBedroom, getAll, deleteRoom, getRoom } from "../services/BedroomService";
 
 export async function index(req: Request, res: Response) {
@@ -41,6 +41,15 @@ export async function setCustommer(req: Request, res: Response) {
         return res.status(400).json({ message: 'O cliente é inválido.' });
 
     await createHistory(req.user?.id as any, idCustomer, id);
+    res.json({ message: 'Ok.' });
+}
+
+export async function limpar(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    if (id < 1)
+        return res.status(400).json({ message: 'O quarto é inválido.' });
+
+    signalCleared(id);
     res.json({ message: 'Ok.' });
 }
 

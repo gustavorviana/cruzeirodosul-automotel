@@ -1,9 +1,8 @@
 import { Op } from "sequelize";
 import { BedroomHistory } from "../model/BedroomHistory";
-import { Consumption } from "../model/Consumption";
 import { existBedroom } from "./BedroomService";
+import { deleteConsumoByRoom } from "./ConsumoService";
 import { existCustomer } from "./CustomerService";
-import { descontarDoEstoque, getStock } from "./StockService";
 
 export async function createHistory(userId: number, idCustomer: number, idBedroom: number) {
     if (!await existCustomer(idCustomer))
@@ -48,6 +47,19 @@ export async function isBedroomInUse(id: number) {
     }) > 0;
 }
 
+export async function signalCleared(idQuarto: number) {
+    await BedroomHistory.update({ cleanedAt: new Date() },
+        {
+            where: {
+                bedroomId: idQuarto,
+                cleanedAt: {
+                    [Op.is]: null
+                }
+            }
+        }
+    );
+}
+
 export async function getHistory(idQuarto: number) {
     return await BedroomHistory.findOne({
         where: {
@@ -57,4 +69,9 @@ export async function getHistory(idQuarto: number) {
             bedroomId: idQuarto
         }
     });
+}
+
+export async function deleteHistoryByRoom(idQuarto: number) {
+    await deleteConsumoByRoom(idQuarto);
+    await BedroomHistory.destroy({ where: { bedroomId: idQuarto } });
 }
