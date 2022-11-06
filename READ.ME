@@ -1,0 +1,10 @@
+Para configurar os aplicativos é necessário ter uma conexão com um servidor do mysql.
+
+1. Em Backend existe um arquivo chamado .env.example, copie o conteúdo dele para um novo arquivo chamado .env e configure a conexão com o servidor.
+1.1. Criar banco de dados chamado "automotel".
+2. Depois disso execute "Script de criação do banco.sql" no servidor mysql conectado.
+
+Ao finalizar essas etapas execute os comandos abaixo em prompt's de comandos separados
+
+1. cd ./interface && npm i && npm run dev
+2. cd ./backend && npm i && npm run build && npm start
