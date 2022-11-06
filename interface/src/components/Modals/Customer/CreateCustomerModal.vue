@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import CustomerAutoComplete from '@/components/CustomerAutoComplete.vue';
 import InputGroup from '@/components/Form/InputGroup.vue';
 import Modal from '@/components/Modal.vue';
 import { onUpdated, ref } from 'vue';
@@ -6,9 +7,10 @@ const name = ref<string>();
 const document = ref<string>();
 
 let isOpen = false;
-const props = defineProps({
-    isCreateOpen: Boolean
-})
+const props = defineProps<{
+    isCreateOpen: boolean
+    item?: Customer
+}>()
 const emit = defineEmits<{
     (e: 'onCancel'): void
     (e: 'onSave', customer: Customer): void
@@ -38,10 +40,18 @@ onUpdated(() => {
         return;
 
     isOpen = props.isCreateOpen;
-    if (isOpen) {
-        name.value = '';
-        document.value = '';
-    }
+    
+    document.value = '';
+    name.value = '';
+   
+
+    if (!props.item)
+        return;
+
+        document.value = props.item.document; 
+    name.value = props.item.name;
+   
+    
 });
 
 function onKeyDown(e: KeyboardEvent) {
