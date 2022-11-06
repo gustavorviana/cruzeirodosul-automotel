@@ -8,10 +8,10 @@ export default async function () {
     console.log('Verificando banco de dados...');
 
     await db.authenticate();
-    configurePermissions();
-    configureGroups();
-    configureUsers();
-    configureGroupPermissions();
+    await configurePermissions();
+    await configureGroups();
+    await configureUsers();
+    await configureGroupPermissions();
 
     console.log("Iniciando express...");
 
