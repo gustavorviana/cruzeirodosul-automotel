@@ -72,4 +72,5 @@ interface RoomHistory {
     leaveAt: Date | null,
     customer: Customer,
     Consumptions: Consumptions;
+    bedroom: Room;
 }

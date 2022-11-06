@@ -1,4 +1,5 @@
 import { Op } from "sequelize";
+import { Bedroom } from "../model/Bedroom";
 import { BedroomHistory } from "../model/BedroomHistory";
 import { Consumption } from "../model/Consumption";
 import { Customer } from "../model/Customer";
@@ -79,7 +80,7 @@ export async function getAllHistry() {
         include: [Customer, {
             model: Consumption,
             include: [Stock]
-        }]
+        }, Bedroom]
     });
 }
 

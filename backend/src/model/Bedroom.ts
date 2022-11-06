@@ -22,5 +22,3 @@ Bedroom.init({
     freezeTableName: true,
     timestamps: false
 });
-
-Bedroom.hasMany(BedroomHistory, { sourceKey: 'id', foreignKey: 'bedroomId' });
