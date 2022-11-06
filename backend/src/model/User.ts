@@ -22,6 +22,10 @@ export class User extends Model {
             createdAt: this.createdAt
         };
     }
+
+    public can(code: string) {
+        return this.group?.can(code) ?? false;
+    }
 }
 
 User.init({
@@ -54,3 +58,5 @@ User.init({
     createdAt: true,
     timestamps: false
 });
+
+User.hasOne(Group, { sourceKey: 'groupId', foreignKey: 'id', as: 'group' });

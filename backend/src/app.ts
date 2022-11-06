@@ -2,14 +2,16 @@ import express from 'express';
 import route from './routes';
 import cors from 'cors';
 import db from './config/db'
-import { configureGroups, configureUsers } from './config/ModelConfig';
+import { configureGroupPermissions, configureGroups, configurePermissions, configureUsers } from './config/ModelConfig';
 
 export default async function () {
     console.log('Verificando banco de dados...');
 
     await db.authenticate();
+    configurePermissions();
     configureGroups();
     configureUsers();
+    configureGroupPermissions();
 
     console.log("Iniciando express...");
 

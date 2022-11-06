@@ -3,6 +3,7 @@ import path from 'path';
 import LoginController from '../controller/Login';
 import LogoutController from '../controller/Logout';
 import * as Room from '../controller/Room';
+import * as UserCtl from '../controller/UserController';
 import * as Consumo from '../controller/Consumos';
 import * as Stock from '../controller/Stock';
 import * as Customer from '../controller/Customer';
@@ -46,6 +47,10 @@ route.delete('/api/estoque/:id', _(Stock.destroy));
 //Consumos
 route.get('/api/consumos/:idQuarto', _(Consumo.get));
 route.post('/api/consumos', _(Consumo.consumirProduto));
+
+//Usuários
+route.get('/api/usuarios', UserCtl.index)
+route.get('/api/usuarios/:id/permissions', UserCtl.getPermissions)
 
 function _(route: (req: Request, res: Response) => Promise<any>) {
     return (req: Request, res: Response) => {

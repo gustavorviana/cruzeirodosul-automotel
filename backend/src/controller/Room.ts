@@ -1,16 +1,26 @@
 import { Request, Response } from "express";
+import { GerenciarQuarto, LimparQuarto } from "../Permissions";
 import { createHistory, freeBedroom, isBedroomInUse, signalCleared } from "../services/BedroomHistoryService";
 import { hasBedroomNumber, registerBedroom, getAll, deleteRoom, getRoom } from "../services/BedroomService";
 
 export async function index(req: Request, res: Response) {
+    if (!req.user?.can(GerenciarQuarto) && !req.user?.can(LimparQuarto))
+        return res.status(403).json({ message: 'Sem permissão para isso.' });
+
     res.json(await getAll(Number(req.query.peerPage ?? 10), Number(req.query.page ?? 1)));
 };
 
 export async function get(req: Request, res: Response) {
+    if (!req.user?.can(GerenciarQuarto)&& !req.user?.can(LimparQuarto))
+        return res.status(403).json({ message: 'Sem permissão para isso.' });
+
     res.json(await getRoom(Number(req.params.id)));
 }
 
 export async function deleteRequest(req: Request, res: Response) {
+    if (!req.user?.can(GerenciarQuarto))
+        return res.status(403).json({ message: 'Sem permissão para isso.' });
+
     const id = getRoomId(req);
     if (id < 1)
         return res.status(400).json({ message: 'O quarto é inválido.' });
@@ -23,6 +33,9 @@ export async function deleteRequest(req: Request, res: Response) {
 };
 
 export async function freeRoom(req: Request, res: Response) {
+    if (!req.user?.can(GerenciarQuarto))
+        return res.status(403).json({ message: 'Sem permissão para isso.' });
+
     const id = Number(req.params.id);
     if (id < 1)
         return res.status(400).json({ message: 'O quarto é inválido.' });
@@ -32,6 +45,9 @@ export async function freeRoom(req: Request, res: Response) {
 }
 
 export async function setCustommer(req: Request, res: Response) {
+    if (!req.user?.can(GerenciarQuarto))
+        return res.status(403).json({ message: 'Sem permissão para isso.' });
+
     const id = Number(req.params.id);
     if (id < 1)
         return res.status(400).json({ message: 'O quarto é inválido.' });
@@ -45,6 +61,9 @@ export async function setCustommer(req: Request, res: Response) {
 }
 
 export async function limpar(req: Request, res: Response) {
+    if (!req.user?.can(LimparQuarto))
+        return res.status(403).json({ message: 'Sem permissão para isso.' });
+
     const id = Number(req.params.id);
     if (id < 1)
         return res.status(400).json({ message: 'O quarto é inválido.' });
@@ -54,6 +73,9 @@ export async function limpar(req: Request, res: Response) {
 }
 
 export async function register(req: Request, res: Response) {
+    if (!req.user?.can(GerenciarQuarto))
+        return res.status(403).json({ message: 'Sem permissão para isso.' });
+
     const roomNumber = getRoomNumber(req);
     if (roomNumber <= 0)
         return res.status(400).json({

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Card from '@/components/Card.vue';
 import Layout from '../components/Layout.vue'
 import PageTitle from '../components/PageTitle.vue'
 </script>
@@ -8,5 +9,9 @@ import PageTitle from '../components/PageTitle.vue'
         <PageTitle>
             Dashboard
         </PageTitle>
+
+        <Card>
+            
+        </Card>
     </Layout>
 </template>

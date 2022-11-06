@@ -20,6 +20,23 @@ export function getCurrentUser() {
     return getCurrentSession()?.user ?? null;
 }
 
+export function hasPermission(code: string) {
+    const user = getCurrentUser();
+    if (!user)
+        return false;
+
+    return existsCode(user.group?.permissions, code);
+}
+
+function existsCode(permissions: Permission[], code: string) {
+    code = code.toLowerCase();
+    for (let i = 0; i < permissions.length; i++)
+        if (permissions[i].code == code)
+            return true;
+
+    return false;
+}
+
 export async function loginUser(email: string, password: string) {
     const response = await axios.post('api/logar', { email, password });
 

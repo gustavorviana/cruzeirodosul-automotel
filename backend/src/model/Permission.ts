@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/db';
+import { GroupPermission } from './GroupPermission';
 
 export class Permission extends Model {
     declare code: string;
@@ -22,3 +23,5 @@ Permission.init({
     freezeTableName: true,
     timestamps: false
 });
+
+Permission.hasOne(GroupPermission, { foreignKey: 'code', sourceKey: 'code' });

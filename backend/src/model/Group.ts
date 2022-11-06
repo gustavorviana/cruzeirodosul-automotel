@@ -1,10 +1,33 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/db';
+import { PermissionInfo } from '../Declarations';
 
 export class Group extends Model {
     declare id: number;
     declare name: string;
     declare description: string;
+    declare permissions: PermissionInfo[];
+
+    public toJSON() {
+        return {
+            id: this.id,
+            namme: this.name,
+            description: this.description,
+            permissions: this.permissions
+        };
+    }
+
+    public can(code: string) {
+        if (!this?.permissions?.length)
+            return false;
+
+        code = code.toLowerCase();
+        for (let i = 0; i < this.permissions.length; i++)
+            if (this.permissions[i].code == code)
+                return true;
+
+        return false;
+    }
 }
 
 Group.init({

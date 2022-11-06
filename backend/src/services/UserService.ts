@@ -1,11 +1,17 @@
 import bcrypt from 'bcrypt';
 import { v4 as genUuid4 } from 'uuid';
+import { Group } from '../model/Group';
 import { Session } from '../model/Session';
 import { User } from '../model/User';
+import { getGroupPermissions } from './GroupService';
 
 export async function authUser(email: string, password: string) {
     const user = await User.findOne({
-        where: { email }
+        where: { email },
+        include: [{
+            model: Group,
+            as: 'group'
+        }]
     });
 
     if (!user)
@@ -16,6 +22,8 @@ export async function authUser(email: string, password: string) {
         return null;
 
     user.password = undefined as any;
+    if (user.group)
+        user.group.permissions = await getGroupPermissions(user.groupId);
     return createSession(user);
 }
 
@@ -27,6 +35,15 @@ export async function createUser(name: string, email: string, password: string, 
     })
 
     user.password = undefined as any;
+}
+
+export async function getAllUsers() {
+    const users = await User.findAll();
+
+    return users.map(u => {
+        u.password = undefined as any;
+        return u;
+    });
 }
 
 async function createSession(user: User) {

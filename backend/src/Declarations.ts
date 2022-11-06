@@ -29,3 +29,8 @@ export interface Room {
     consumptions: FrontConsumption[];
     cleared: boolean;
 }
+
+export interface PermissionInfo {
+    code: string;
+    name: string;
+}

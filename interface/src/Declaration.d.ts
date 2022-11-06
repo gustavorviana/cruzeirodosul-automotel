@@ -1,6 +1,18 @@
+interface Permission {
+    code: string;
+    name: string;
+}
+
+interface Group {
+    id: number;
+    name: string;
+    description: string;
+    permissions: Permission[];
+}
+
 interface User {
     id: number;
-    groupId: number;
+    group: Group;
     email: string;
     name: string;
 }
