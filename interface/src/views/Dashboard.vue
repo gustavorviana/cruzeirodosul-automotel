@@ -79,7 +79,7 @@ function createExemplo(enterAt: Date, leaveAt: Date | null, cliente: string) {
                 </CardInfo>
             </div>
         </div>
-        <Card>
+        <Card title="Clientes">
         
 
         </Card>
