@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Card from '@/components/Card.vue';
 import CardInfo from '@/components/CardInfo.vue';
 import { ref } from 'vue';
 import Layout from '../components/Layout.vue'
@@ -78,5 +79,9 @@ function createExemplo(enterAt: Date, leaveAt: Date | null, cliente: string) {
                 </CardInfo>
             </div>
         </div>
+        <Card>
+        
+
+        </Card>
     </Layout>
 </template>
