@@ -80,7 +80,29 @@ function createExemplo(enterAt: Date, leaveAt: Date | null, cliente: string) {
             </div>
         </div>
         <Card title="Clientes">
-        
+            <table class="table table-hover my-0">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th class="d-none d-xl-table-cell">Hora Entrada</th>
+                        <th class="d-none d-xl-table-cell">Hora Saída</th>
+                        <th>Quarto</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="historico in historicoQuartos">
+                        <td>{{ historico.customer?.name ?? `DESCONHECIDO` }} </td>
+                        <td class="d-none d-xl-table-cell">{{ historico.enterAt }}</td>
+                        <td class="d-none d-xl-table-cell">{{ historico.leaveAt?.toDateString() ?? `-` }}</td>
+                        <td>{{historico.bedroomId}}</td>
+
+                    </tr>
+
+
+                </tbody>
+            </table>
+
 
         </Card>
     </Layout>
