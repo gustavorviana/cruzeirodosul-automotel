@@ -10,6 +10,7 @@ import { axios } from '@/Defaults';
 import { ref } from 'vue';
 import { toBrDate, refreshSystemIcons, showAxiosError } from '../utils';
 import RoomOptionsModal from '@/components/Modals/Customer/RoomOptionsModal.vue';
+import RoomInfo from '@/components/RoomInfo.vue';
 
 const isCreateOpen = ref(false);
 const roomNumber = ref<number | string>('');
@@ -105,23 +106,8 @@ async function refresh() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="room in rooms">
-                        <td>#{{ room.roomNumber }}</td>
-                        <td>{{ room.ocupationInfo?.customer?.name ?? '-' }}</td>
-                        <td class="d-none d-md-table-cell">{{ toBrDate(room.ocupationInfo?.startAt)
-                        }}
-                        </td>
-                        <td class="d-none d-md-table-cell">{{ room.ocupationInfo?.timeInfo ?? '-' }}</td>
-                        <td>{{ room.ocupationInfo?.timeInfo ? 'Ocupado' : room.cleared ? 'Desocupado' : 'Aguardando limpeza' }}</td>
-                        <td class="table-action">
-                            <a href="#" @click="() => showOptionsModal(room.id)">
-                                <Icon icon="settings" />
-                            </a>
-                            <a href="#" @click="() => deleteRoom(room.id)">
-                                <Icon icon="trash-2" />
-                            </a>
-                        </td>
-                    </tr>
+                    <RoomInfo v-for="room in rooms" :room="room" @on-delete="() => showOptionsModal(room.id)"
+                        @on-edit="() => showOptionsModal(room.id)" />
                 </tbody>
             </table>
         </Card>

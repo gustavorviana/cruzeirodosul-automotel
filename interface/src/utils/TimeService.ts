@@ -31,6 +31,9 @@ export class TimeService {
     public get info(): string {
         let text = '';
 
+        if (this.hours == 0 && this.minutes == 0 && this.seconds <= 1)
+            return '1 s';
+
         if (this.hours > 0)
             text = `${this.hours} h`;
 
@@ -41,7 +44,7 @@ export class TimeService {
             text += `${this.minutes} m`;
         }
 
-        if (this.seconds > 0 && this.hours == 0&& this.minutes == 0) {
+        if (this.seconds > 0 && this.hours == 0 && this.minutes == 0) {
             if (text)
                 text += ' ';
 
