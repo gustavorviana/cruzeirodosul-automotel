@@ -1,5 +1,8 @@
 import { Op } from "sequelize";
 import { BedroomHistory } from "../model/BedroomHistory";
+import { Consumption } from "../model/Consumption";
+import { Customer } from "../model/Customer";
+import { Stock } from "../model/Stock";
 import { existBedroom } from "./BedroomService";
 import { deleteConsumoByRoom } from "./ConsumoService";
 import { existCustomer } from "./CustomerService";
@@ -68,6 +71,15 @@ export async function getHistory(idQuarto: number) {
             },
             bedroomId: idQuarto
         }
+    });
+}
+
+export async function getAllHistry() {
+    return await BedroomHistory.findAll({
+        include: [Customer, {
+            model: Consumption,
+            include: [Stock]
+        }]
     });
 }
 

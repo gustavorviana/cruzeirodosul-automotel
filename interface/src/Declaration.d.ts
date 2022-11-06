@@ -53,3 +53,23 @@ interface Room {
     ocupationInfo: Ocupation | null;
     cleared: boolean;
 }
+
+interface Consumptions {
+    id: number,
+    stockId: number,
+    bedroomHistoryId: number,
+    quantity: number,
+    Stock: Stock;
+}
+
+interface RoomHistory {
+    id: number,
+    customerId: number,
+    userId: number,
+    bedroomId: number,
+    enterAt: Date,
+    cleanedAt: Date | null,
+    leaveAt: Date | null,
+    customer: Customer,
+    Consumptions: Consumptions;
+}

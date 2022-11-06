@@ -6,6 +6,8 @@ import { axios } from '@/Defaults';
 import { showAxiosError } from '@/utils';
 import CustomerAutoComplete from '@/components/CustomerAutoComplete.vue';
 import StockAutoComplete from '@/components/StockAutoComplete.vue';
+import { LimparQuarto } from '@/Permissions';
+import { hasPermission } from '@/utils/UserUtils';
 
 const props = defineProps<{
     isOpen: boolean,
@@ -135,7 +137,7 @@ function refreshConsumos() {
                 @click="ocuparQuarto" :disabled="!selectedCustomer">Ocupar
                 quarto</button>
 
-            <button v-if="!props.room?.ocupationInfo && !props.room?.cleared" class="btn btn-warning"
+            <button v-if="!props.room?.ocupationInfo && !props.room?.cleared && hasPermission(LimparQuarto)" class="btn btn-warning"
                 @click="limparQuarto">Limpar o quarto</button>
         </template>
     </Modal>

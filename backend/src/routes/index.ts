@@ -29,6 +29,7 @@ route.get('/api/quartos/:id', _(Room.get));
 route.post('/api/quartos/:id/desocupar', _(Room.freeRoom));
 route.post('/api/quartos/:id/ocupar', _(Room.setCustommer));
 route.post('/api/quartos/:id/limpar', _(Room.limpar));
+route.get('/api/historicoquartos', _(Room.getHistory));
 route.post('/api/quartos', _(Room.register));
 route.delete('/api/quartos', _(Room.deleteRequest));
 

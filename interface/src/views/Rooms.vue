@@ -100,6 +100,7 @@ async function refresh() {
                         <th style="width:35%">Cliente ocupando</th>
                         <th class="d-none d-md-table-cell" style="width:35%">Início ocupação</th>
                         <th>Tempo ocupação</th>
+                        <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -111,6 +112,7 @@ async function refresh() {
                         }}
                         </td>
                         <td class="d-none d-md-table-cell">{{ room.ocupationInfo?.timeInfo ?? '-' }}</td>
+                        <td>{{ room.ocupationInfo?.timeInfo ? 'Ocupado' : room.cleared ? 'Desocupado' : 'Aguardando limpeza' }}</td>
                         <td class="table-action">
                             <a href="#" @click="() => showOptionsModal(room.id)">
                                 <Icon icon="settings" />
@@ -135,6 +137,6 @@ async function refresh() {
                 <button type="button" class="btn btn-primary" @click="saveNewRoom">Cadastrar</button>
             </template>
         </Modal>
-        <RoomOptionsModal :is-open="!!roomOption" :room="roomOption" @on-close="closeOptionsModal" @refresh="refresh"/>
+        <RoomOptionsModal :is-open="!!roomOption" :room="roomOption" @on-close="closeOptionsModal" @refresh="refresh" />
     </Layout>
 </template>
