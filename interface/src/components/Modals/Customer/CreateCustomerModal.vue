@@ -40,18 +40,15 @@ onUpdated(() => {
         return;
 
     isOpen = props.isCreateOpen;
-    
+
     document.value = '';
     name.value = '';
-   
 
     if (!props.item)
         return;
 
-        document.value = props.item.document; 
+    document.value = props.item.document;
     name.value = props.item.name;
-   
-    
 });
 
 function onKeyDown(e: KeyboardEvent) {

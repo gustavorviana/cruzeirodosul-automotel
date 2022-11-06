@@ -29,6 +29,13 @@ function createExemplo(enterAt: Date, leaveAt: Date | null, cliente: string) {
         id: 1
     } as RoomHistory;
 }
+
+function toBrDate(data: Date | null) {
+    if (!data)
+        return '-';
+
+    return `${data.toLocaleDateString('pt-br')} ${data.toLocaleTimeString('pt-br')}`;
+}
 </script>
 
 <template>
@@ -84,8 +91,8 @@ function createExemplo(enterAt: Date, leaveAt: Date | null, cliente: string) {
                 <thead>
                     <tr>
                         <th>Cliente</th>
-                        <th class="d-none d-xl-table-cell">Hora Entrada</th>
-                        <th class="d-none d-xl-table-cell">Hora Saída</th>
+                        <th class="d-none d-xl-table-cell">Entrada</th>
+                        <th class="d-none d-xl-table-cell">Saída</th>
                         <th>Quarto</th>
 
                     </tr>
@@ -93,17 +100,13 @@ function createExemplo(enterAt: Date, leaveAt: Date | null, cliente: string) {
                 <tbody>
                     <tr v-for="historico in historicoQuartos">
                         <td>{{ historico.customer?.name ?? `DESCONHECIDO` }} </td>
-                        <td class="d-none d-xl-table-cell">{{ historico.enterAt }}</td>
-                        <td class="d-none d-xl-table-cell">{{ historico.leaveAt?.toDateString() ?? `-` }}</td>
-                        <td>{{historico.bedroomId}}</td>
-
+                        <td class="d-none d-xl-table-cell">{{ toBrDate(historico.enterAt) }}</td>
+                        <td class="d-none d-xl-table-cell">{{ toBrDate(historico.leaveAt) }}
+                        </td>
+                        <td>{{ historico.bedroomId }}</td>
                     </tr>
-
-
                 </tbody>
             </table>
-
-
         </Card>
     </Layout>
 </template>

@@ -4,7 +4,6 @@ import { Bedroom } from "../model/Bedroom";
 import { BedroomHistory } from "../model/BedroomHistory";
 import { Customer } from "../model/Customer";
 import { deleteHistoryByRoom } from "./BedroomHistoryService";
-import { TimeService } from "./TimeService";
 
 export async function hasBedroomNumber(roomNumber: number) {
     return await Bedroom.count({ where: { number: roomNumber } }) > 0;
@@ -108,13 +107,9 @@ async function isCleared(idBedroom: number) {
 function getOcupationInfo(history: BedroomHistory | null) {
     if (!history)
         return null;
-
-    const timeSpent = new Date().getTime() - history.enterAt.getTime();
-
     return {
         customer: history.customer,
-        startAt: history.enterAt,
-        timeInfo: new TimeService(timeSpent).info
+        startAt: history.enterAt
     } as Ocupation;
 }
 

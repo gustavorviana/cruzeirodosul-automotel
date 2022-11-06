@@ -41,7 +41,7 @@ export class TimeService {
             text += `${this.minutes} m`;
         }
 
-        if (this.seconds > 0) {
+        if (this.seconds > 0 && this.hours == 0&& this.minutes == 0) {
             if (text)
                 text += ' ';
 
@@ -50,5 +50,4 @@ export class TimeService {
 
         return text;
     }
-
 }

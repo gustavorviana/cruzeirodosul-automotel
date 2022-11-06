@@ -12,7 +12,6 @@ declare global {
 export interface Ocupation {
     startAt: Date;
     customer: Customer;
-    timeInfo: string;
 }
 
 export interface FrontConsumption {
