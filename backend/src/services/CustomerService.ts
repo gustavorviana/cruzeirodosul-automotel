@@ -54,3 +54,10 @@ export async function existCustomer(id: number) {
         }
     }) > 0;
 }
+
+export async function updateCustomer(id: number, name: string, document: string) {
+    await Customer.update(
+        { name, document },
+        { where: { id } }
+    );
+}

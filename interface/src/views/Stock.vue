@@ -19,10 +19,7 @@ function saveItem(stock: Stock) {
     isCreateOpen.value = false;
 
     if (toUpdate.value) {
-        console.log(stock);
-        
         axios.patch('api/estoque/' + toUpdate.value.id, stock)
-            .then(data => stockItems.value = data.data)
             .then(() => refresh())
             .catch((e) => showAxiosError(e, 'Ocorreu um erro interno.'));
 

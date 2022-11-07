@@ -5,34 +5,23 @@ import { ref } from 'vue';
 import Layout from '../components/Layout.vue'
 import PageTitle from '../components/PageTitle.vue'
 
-const clientes = ref<Customer[]>([]);
-const faturamento = ref<number>(0);
-const estoques = ref<number>(0);
+const dashboardCards = ref<DashboardCards>({} as any);
+const historicoQuartos = ref<RoomHistory[]>();
 
-const historicoQuartos = ref<RoomHistory[]>([
-    createExemplo(new Date(), null, "Rodolfo"),
-    createExemplo(new Date(), new Date(), "Marcelo"),
-]);
+axios.get('/api/dashboard').then(r => dashboardCards.value = r.data);
+axios.get('/api/historicoquartos').then(r => {
 
-function createExemplo(enterAt: Date, leaveAt: Date | null, cliente: string) {
-    return {
-        bedroomId: 1,
-        customer: {
-            name: cliente,
-            document: '000000',
-            id: 1
-        },
-        enterAt,
-        leaveAt,
-        userId: 1,
-        customerId: 1,
-        id: 1
-    } as RoomHistory;
-}
+    console.log(r.data);
 
-function toBrDate(data: Date | null) {
+    historicoQuartos.value = r.data;
+});
+
+function toBrDate(data: Date | string | null) {
     if (!data)
         return '-';
+
+    if (typeof data == 'string')
+        data = new Date(data);
 
     return `${data.toLocaleDateString('pt-br')} ${data.toLocaleTimeString('pt-br')}`;
 }
@@ -46,7 +35,7 @@ function toBrDate(data: Date | null) {
 
         <div class="row">
             <div class="col-sm-4">
-                <CardInfo title="Itens estoque" :value="estoques.toString()">
+                <CardInfo title="Itens disponíveis estoque" :value="(dashboardCards.estoque ?? 0).toString()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="feather feather-truck align-middle">
@@ -59,7 +48,7 @@ function toBrDate(data: Date | null) {
                 </CardInfo>
             </div>
             <div class="col-sm-4">
-                <CardInfo title="Clientes" :value="clientes.length.toString()">
+                <CardInfo title="Clientes" :value="(dashboardCards.clientes ?? 0).toString()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="feather feather-users align-middle">
@@ -72,7 +61,7 @@ function toBrDate(data: Date | null) {
                 </CardInfo>
             </div>
             <div class="col-sm-4">
-                <CardInfo title="Faturamento" :value="faturamento.toLocaleString('pt-br', {
+                <CardInfo title="Faturamento" :value="(dashboardCards.faturamento ?? 0).toLocaleString('pt-br', {
                     style: 'currency',
                     currency: 'BRL'
                 })">
@@ -103,7 +92,7 @@ function toBrDate(data: Date | null) {
                         <td class="d-none d-xl-table-cell">{{ toBrDate(historico.enterAt) }}</td>
                         <td class="d-none d-xl-table-cell">{{ toBrDate(historico.leaveAt) }}
                         </td>
-                        <td>{{ historico.bedroomId }}</td>
+                        <td>#{{ (historico.bedroom as any).number }}</td>
                     </tr>
                 </tbody>
             </table>

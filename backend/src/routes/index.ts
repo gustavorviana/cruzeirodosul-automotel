@@ -7,6 +7,7 @@ import * as UserCtl from '../controller/UserController';
 import * as Consumo from '../controller/Consumos';
 import * as Stock from '../controller/Stock';
 import * as Customer from '../controller/Customer';
+import * as Dashboard from '../controller/Dashboard';
 import auth from '../middleware/AuthMiddleware';
 
 const route = Router();
@@ -36,6 +37,7 @@ route.delete('/api/quartos', _(Room.deleteRequest));
 //Clientes
 route.get('/api/clientes', _(Customer.index));
 route.get('/api/clientes/:id', _(Customer.get));
+route.patch('/api/clientes/:id', _(Customer.update));
 route.post('/api/clientes', _(Customer.register));
 
 //Estoque
@@ -50,8 +52,11 @@ route.get('/api/consumos/:idQuarto', _(Consumo.get));
 route.post('/api/consumos', _(Consumo.consumirProduto));
 
 //Usuários
-route.get('/api/usuarios', UserCtl.index)
-route.get('/api/usuarios/:id/permissions', UserCtl.getPermissions)
+route.get('/api/usuarios', _(UserCtl.index))
+route.get('/api/usuarios/:id/permissions', _(UserCtl.getPermissions))
+
+//Dashboard
+route.get('/api/dashboard', _(Dashboard.index))
 
 function _(route: (req: Request, res: Response) => Promise<any>) {
     return (req: Request, res: Response) => {

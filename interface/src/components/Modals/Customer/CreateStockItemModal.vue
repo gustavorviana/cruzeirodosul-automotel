@@ -80,7 +80,7 @@ onUpdated(() => {
         <template v-slot:button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                 @click="() => emit('onCancel')">Cancelar</button>
-            <button type="button" class="btn btn-primary" @click="save">Cadastrar</button>
+            <button type="button" class="btn btn-primary" @click="save">Salvar</button>
         </template>
     </Modal>
 </template>

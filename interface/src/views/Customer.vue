@@ -18,6 +18,15 @@ refresh();
 function saveNewCustomer(customer: Customer) {
     isCreateOpen.value = false;
 
+    if (toUpdate.value) {
+        axios.patch('api/clientes/' + toUpdate.value.id, customer)
+            .then(() => refresh())
+            .catch((e) => showAxiosError(e, 'Ocorreu um erro interno.'));
+
+        toUpdate.value = undefined;
+        return;
+    }
+
     axios.post('api/clientes', customer)
         .then(data => customers.value = data.data)
         .then(() => refresh())

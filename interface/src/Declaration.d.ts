@@ -74,3 +74,13 @@ interface RoomHistory {
     Consumptions: Consumptions;
     bedroom: Room;
 }
+
+interface DashboardCards {
+    estoque: number;
+    clientes: number;
+    faturamento: number;
+
+    quartosOcupados: number;
+    quartosLivres: number;
+    quartosAguardandoLimpeza: number;
+}

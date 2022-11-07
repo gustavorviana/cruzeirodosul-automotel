@@ -33,3 +33,13 @@ export interface PermissionInfo {
     code: string;
     name: string;
 }
+
+export interface DashboardCards {
+    estoque: number;
+    clientes: number;
+    faturamento: number;
+
+    quartosOcupados: number;
+    quartosLivres: number;
+    quartosAguardandoLimpeza: number;
+}
