@@ -106,7 +106,7 @@ async function refresh() {
                     </tr>
                 </thead>
                 <tbody>
-                    <RoomInfo v-for="room in rooms" :room="room" @on-delete="() => showOptionsModal(room.id)"
+                    <RoomInfo v-for="room in rooms" :room="room" @on-delete="() => deleteRoom(room.id)"
                         @on-edit="() => showOptionsModal(room.id)" />
                 </tbody>
             </table>

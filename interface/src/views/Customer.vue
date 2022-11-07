@@ -42,7 +42,7 @@ async function refresh() {
     return axios.get('api/clientes')
         .then(data => customers.value = data.data)
         .then(() => refreshSystemIcons())
-        .catch((e) => showAxiosError(e, 'Não foi possível listar os quartos. ' + e));
+        .catch((e) => showAxiosError(e, 'Não foi possível listar os clientes. ' + e));
 }
 </script>
 

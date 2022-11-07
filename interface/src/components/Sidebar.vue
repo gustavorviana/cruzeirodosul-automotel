@@ -3,7 +3,7 @@ import { hasPermission } from "@/utils/UserUtils";
 import { RouterLink } from "vue-router";
 import MenuLink from '../components/MenuLink.vue'
 import SidebarHeader from '../components/SidebarHeader.vue'
-import { GerenciarQuarto, GerenciarClientes, GerenciarEstoque, LimparQuarto } from '../Permissions';
+import { GerenciarQuarto, GerenciarClientes, GerenciarEstoque, LimparQuarto, GerenciarUsuarios } from '../Permissions';
 </script>
 
 <template>
@@ -22,6 +22,7 @@ import { GerenciarQuarto, GerenciarClientes, GerenciarEstoque, LimparQuarto } fr
                 <MenuLink to="/quartos" name="Quartos" icon="home" v-if="hasPermission(GerenciarQuarto) || hasPermission(LimparQuarto)" />
                 <MenuLink to="/clientes" name="Clientes" icon="users" v-if="hasPermission(GerenciarClientes)"/>
                 <MenuLink to="/estoque" name="Estoque" icon="list" v-if="hasPermission(GerenciarEstoque)"/>
+                <MenuLink to="/usuarios" name="Usuarios" icon="users" v-if="hasPermission(GerenciarUsuarios)"/>
             </ul>
         </div>
     </nav>

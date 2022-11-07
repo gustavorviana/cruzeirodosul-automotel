@@ -11,7 +11,7 @@ export class Group extends Model {
     public toJSON() {
         return {
             id: this.id,
-            namme: this.name,
+            name: this.name,
             description: this.description,
             permissions: this.permissions
         };

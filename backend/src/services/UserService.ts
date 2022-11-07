@@ -38,7 +38,12 @@ export async function createUser(name: string, email: string, password: string, 
 }
 
 export async function getAllUsers() {
-    const users = await User.findAll();
+    const users = await User.findAll({
+        include: [{
+            model: Group,
+            as: 'group'
+        }]
+    });
 
     return users.map(u => {
         u.password = undefined as any;
