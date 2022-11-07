@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
+import { Op } from 'sequelize';
 import { v4 as genUuid4 } from 'uuid';
+import { BedroomHistory } from '../model/BedroomHistory';
 import { Group } from '../model/Group';
 import { Session } from '../model/Session';
 import { User } from '../model/User';
@@ -60,4 +62,46 @@ async function createSession(user: User) {
 
     session.user = user;
     return session;
+}
+
+export async function create(user: User) {
+    user.createdAt = new Date();
+    user.password = await bcrypt.hash(user.password, 10);
+    user.groupId = Number(user.groupId);
+
+    if (await User.count({ where: { email: user.email } }))
+        throw new Error("O Email já está em uso.");
+
+    await User.create({ ...user, document: '' });
+}
+
+export async function update(id: number, user: User) {
+    user.groupId = Number(user.groupId);
+
+    if (!user.password)
+        user.password = undefined as any;
+    else
+        user.password = await bcrypt.hash(user.password, 10);
+
+
+    if (await User.count({ where: { email: user.email, id: { [Op.not]: id } } }))
+        throw new Error("O Email já está em uso.");
+
+    if (id == 1)
+        user.groupId = undefined as any;
+
+    await User.update({
+        groupId: user.groupId,
+        name: user.name,
+        email: user.email,
+        password: user.password
+    }, {
+        where: { id: id }
+    });
+}
+
+export async function remove(id: number) {
+    await BedroomHistory.update({ userId: 1 }, { where: { id } })
+    await Session.destroy({ where: { userId: id } });
+    await User.destroy({ where: { id } });
 }

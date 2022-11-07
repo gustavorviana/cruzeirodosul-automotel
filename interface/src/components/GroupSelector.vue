@@ -22,8 +22,8 @@ axios.get('/api/grupos')
 </script>
 
 <template>
-    <select class="form-select mb-3" @change="e => onChange(e)">
-        <option v-for="group in groups" :value="group.id" :selected="group.id == props.groupId">{{ group.name }}
+    <select v-model="props.groupId" class="form-select mb-3" @change="e => onChange(e)">
+        <option v-for="group in groups" :value="group.id">{{ group.name }}
         </option>
     </select>
 </template>

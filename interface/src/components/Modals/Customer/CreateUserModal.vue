@@ -2,9 +2,12 @@
 import InputGroup from '@/components/Form/InputGroup.vue';
 import GroupSelector from '@/components/GroupSelector.vue';
 import Modal from '@/components/Modal.vue';
-import { onUpdated, ref } from 'vue';
-const name = ref<string>();
-const document = ref<string>();
+import { onUpdated, ref, type Ref } from 'vue';
+
+const name = ref<string>('');
+const idGroup = ref<number>(0);
+const email = ref<string>('');
+const password = ref<string>('');
 
 let isOpen = false;
 const props = defineProps<{
@@ -17,22 +20,38 @@ const emit = defineEmits<{
 }>();
 
 function save() {
-    const nameSize = name.value?.length ?? 0;
-    const docSize = document.value?.length ?? 0;
+    if (!validateSize(name, 'O nome', 3, 255))
+        return;
 
-    if (nameSize < 3)
-        return alert('O nome deve ter pelo menos 3 caracteres.');
-    if (nameSize > 255)
-        return alert('O nome deve ter no máximo 255 caracteres.');
+    if (idGroup.value < 1)
+        return alert('Um grupo deve ser selecionado.');
 
-    if (docSize > 14)
-        return alert('O documento deve ter no máximo 255 caracteres.');
+    if (!validateSize(email, 'O email', 3, 255))
+        return;
 
-    // emit('onSave', {
-    //     id: 0,
-    //     name: name.value as any,
-    //     document: document.value as any
-    // });
+    if (!props.item && !validateSize(password, 'A senha', 3, 255))
+        return;
+
+    emit('onSave', {
+        id: 0,
+        name: name.value,
+        document: '',
+        email: email.value,
+        group: null as any,
+        groupId: idGroup.value,
+        password: password.value
+    });
+}
+
+function validateSize(value: Ref<string | undefined>, fieldName: string, min: number, max: number) {
+    const size = value?.value?.length ?? 0;
+    if (size < min)
+        return alert(`${fieldName} deve ter pelo menos ${min} caracteres.`);
+
+    if (size > max)
+        return alert(`${fieldName} deve ter no máximo ${max} caracteres.`);
+
+    return true;
 }
 
 onUpdated(() => {
@@ -40,18 +59,22 @@ onUpdated(() => {
         return;
 
     isOpen = props.isCreateOpen;
+    password.value = '';
 
-    document.value = '';
-    name.value = '';
-
-    if (!props.item)
+    if (!props.item) {
+        name.value = '';
+        email.value = '';
+        idGroup.value = 0;
         return;
+    }
 
-    // document.value = props.item.document;
-    // name.value = props.item.name;
+    name.value = props.item.name;
+    email.value = props.item.email;
+    idGroup.value = props.item.groupId ?? props.item?.group?.id;
 });
+
 function onSelectGroup(group: Group | null) {
-    console.log(group);
+    idGroup.value = group?.id ?? 0;
 }
 </script>
 
@@ -60,9 +83,16 @@ function onSelectGroup(group: Group | null) {
         <InputGroup header="Nome">
             <input v-model="name" type="text" class="form-control" />
         </InputGroup>
-        <InputGroup header="Grupo">
-            <GroupSelector @on-select="onSelectGroup" />
+        <InputGroup header="E-mail">
+            <input v-model="email" type="text" class="form-control" />
         </InputGroup>
+        <InputGroup header="Senha">
+            <input v-model="password" type="password" class="form-control" />
+        </InputGroup>
+        <InputGroup header="Grupo" v-if="props?.item?.id != 1">
+            <GroupSelector @on-select="onSelectGroup" :groupId="idGroup" />
+        </InputGroup>
+
         <template v-slot:button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                 @click="() => emit('onCancel')">Cancelar</button>

@@ -57,7 +57,9 @@ route.get('/api/grupos', _(GroupCtl.index))
 
 //Usuários
 route.get('/api/usuarios', _(UserCtl.index))
-route.get('/api/usuarios/:id/permissions', _(UserCtl.getPermissions))
+route.post('/api/usuarios', _(UserCtl.create));
+route.patch('/api/usuarios/:id', _(UserCtl.update));
+route.delete('/api/usuarios/:id', _(UserCtl.destroy));
 
 //Dashboard
 route.get('/api/dashboard', _(Dashboard.index))

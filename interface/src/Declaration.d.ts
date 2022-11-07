@@ -12,9 +12,12 @@ interface Group {
 
 interface User {
     id: number;
-    group: Group;
-    email: string;
+    groupId: number;
     name: string;
+    email: string;
+    password: string;
+    document: string;
+    group: Group;
 }
 
 interface Session {
