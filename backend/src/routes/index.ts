@@ -3,6 +3,7 @@ import path from 'path';
 import LoginController from '../controller/Login';
 import LogoutController from '../controller/Logout';
 import * as Room from '../controller/Room';
+import * as GroupCtl from '../controller/GroupController';
 import * as UserCtl from '../controller/UserController';
 import * as Consumo from '../controller/Consumos';
 import * as Stock from '../controller/Stock';
@@ -50,6 +51,9 @@ route.delete('/api/estoque/:id', _(Stock.destroy));
 //Consumos
 route.get('/api/consumos/:idQuarto', _(Consumo.get));
 route.post('/api/consumos', _(Consumo.consumirProduto));
+
+//Grupos
+route.get('/api/grupos', _(GroupCtl.index))
 
 //Usuários
 route.get('/api/usuarios', _(UserCtl.index))

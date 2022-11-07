@@ -9,12 +9,7 @@ const dashboardCards = ref<DashboardCards>({} as any);
 const historicoQuartos = ref<RoomHistory[]>();
 
 axios.get('/api/dashboard').then(r => dashboardCards.value = r.data);
-axios.get('/api/historicoquartos').then(r => {
-
-    console.log(r.data);
-
-    historicoQuartos.value = r.data;
-});
+axios.get('/api/historicoquartos').then(r => historicoQuartos.value = r.data);
 
 function toBrDate(data: Date | string | null) {
     if (!data)

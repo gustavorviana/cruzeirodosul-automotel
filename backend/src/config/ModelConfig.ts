@@ -2,10 +2,14 @@ import { Group } from "../model/Group";
 import { GroupPermission } from "../model/GroupPermission";
 import { Permission } from "../model/Permission";
 import { User } from "../model/User";
-import { GerenciarClientes, GerenciarEstoque, GerenciarQuarto, GerenciarUsuarios, LimparQuarto } from "../Permissions";
+import { GerenciarClientes, GerenciarEstoque, GerenciarGrupos, GerenciarQuarto, GerenciarUsuarios, LimparQuarto } from "../Permissions";
 import { createUser } from "../services/UserService";
 
 export async function configurePermissions() {
+    await Permission.upsert({
+        code: GerenciarGrupos,
+        name: "Gerenciar grupos"
+    });
     await Permission.upsert({
         code: GerenciarUsuarios,
         name: "Gerenciar usuários"
@@ -29,10 +33,10 @@ export async function configurePermissions() {
 }
 
 export async function configureGroupPermissions() {
-    await configureGroupAllPermissions(1, ['clean', 'users', 'rooms', 'stock', 'customers']);
-    await configureGroupAllPermissions(2, ['rooms', 'stock', 'customers']);
-    await configureGroupAllPermissions(3, ['stock']);
-    await configureGroupAllPermissions(4, ['clean']);
+    await configureGroupAllPermissions(1, [LimparQuarto, GerenciarUsuarios, GerenciarQuarto, GerenciarEstoque, GerenciarClientes, GerenciarGrupos]);
+    await configureGroupAllPermissions(2, [GerenciarQuarto, GerenciarEstoque, GerenciarClientes]);
+    await configureGroupAllPermissions(3, [GerenciarEstoque]);
+    await configureGroupAllPermissions(4, [LimparQuarto]);
 }
 
 export async function configureGroups() {

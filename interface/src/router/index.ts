@@ -54,6 +54,7 @@ const router = createRouter({
     }
   ],
 });
+
 router.beforeEach((to, from, next) => {
   const hasUser = !!getCurrentUser();
   if (to.name == "Login" && hasUser)

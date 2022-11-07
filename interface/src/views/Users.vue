@@ -2,12 +2,14 @@
 import Card from '@/components/Card.vue';
 import Icon from '@/components/Icon.vue';
 import Layout from '@/components/Layout.vue';
+import CreateUserModal from '@/components/Modals/Customer/CreateUserModal.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import PageTitle from '@/components/PageTitle.vue';
 import { axios } from '@/Defaults';
 import { ref } from 'vue';
 import { refreshSystemIcons, showAxiosError } from '../utils';
 
+const showEdit = ref(false);
 const users = ref<User[]>([]);
 
 refresh();
@@ -20,7 +22,7 @@ async function refresh() {
 }
 
 async function showCreateUser(usuario?: User) {
-
+    showEdit.value = true;
 }
 </script>
 
@@ -29,7 +31,7 @@ async function showCreateUser(usuario?: User) {
         <PageHeader>
             <template v-slot:title>
                 <PageTitle>
-                    Estoque
+                    Usuários
                 </PageTitle>
             </template>
             <button class="btn btn-primary" @click="() => showCreateUser()">Cadastrar</button>
@@ -65,5 +67,6 @@ async function showCreateUser(usuario?: User) {
                 </tbody>
             </table>
         </Card>
+        <CreateUserModal :isCreateOpen="showEdit" />
     </Layout>
 </template>

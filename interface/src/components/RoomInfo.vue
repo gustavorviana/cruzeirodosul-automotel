@@ -4,6 +4,7 @@ import { computed, ref } from '@vue/reactivity';
 import { onMounted, onUnmounted } from 'vue';
 import { TimeService } from '@/utils/TimeService';
 import Icon from './Icon.vue';
+import Bag from './Bag.vue';
 
 const emit = defineEmits<{
     (e: 'onDelete'): void
@@ -18,6 +19,13 @@ const status = computed(() => {
         return props.room.cleared ? 'Desocupado' : 'Aguardando limpeza';
 
     return 'Ocupado';
+});
+
+const color = computed(() => {
+    if (!props.room.ocupationInfo)
+        return props.room.cleared ? 'red' : 'yellow';
+
+    return 'green';
 });
 
 refreshInfo();
@@ -46,7 +54,9 @@ onUnmounted(() => {
         <td>{{ room.ocupationInfo?.customer?.name ?? '-' }}</td>
         <td class="d-none d-md-table-cell">{{ toBrDate(room.ocupationInfo?.startAt) }}</td>
         <td class="d-none d-md-table-cell">{{ tempoOcupado }}</td>
-        <td>{{ status }}</td>
+        <td>
+            <Bag :color="color" :text="status" />
+        </td>
         <td class="table-action">
             <a href="#" @click="() => emit('onEdit')">
                 <Icon icon="settings" />
